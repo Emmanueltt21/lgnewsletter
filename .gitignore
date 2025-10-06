@@ -1,0 +1,204 @@
+# LG Newsletter - Git Ignore File
+
+# System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.buildpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# CodeIgniter Specific
+application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess
+application/cache/*
+!application/cache/index.html
+!application/cache/.htaccess
+
+# Configuration Files (sensitive)
+application/config/database.php
+application/config/config.php
+application/config/email.php
+application/config/u889622533_yourddlight (1).sql
+
+# Keep example config files
+!application/config/database.example.php
+!application/config/config.example.php
+!application/config/email.example.php
+
+# User Uploads
+uploads/*
+!uploads/index.html
+!uploads/.htaccess
+
+# Keep some sample uploads for reference
+!uploads/thumbnails/newsletter_background_login.png
+
+# Composer
+vendor/
+composer.lock
+
+# Node.js (if using npm/yarn for frontend assets)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Environment Files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary Files
+*.tmp
+*.temp
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Runtime Data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage Directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# PHP specific
+*.log
+error_log
+access_log
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Database dumps
+*.sql
+*.sqlite
+*.db
+
+# Keep schema file for reference
+!database_schema.sql
+
+# Email queue and temporary files
+application/email_queue/*
+!application/email_queue/index.html
+
+# Session files
+application/sessions/*
+!application/sessions/index.html
+
+# Custom application specific ignores
+application/logs/log-*.php
+application/cache/ci_session*
+
+# Ignore any local development files
+local_config.php
+development.ini
+
+# Ignore any test files that might contain sensitive data
+test_data/
+phpunit.xml
+.phpunit.result.cache
+
+# Ignore any documentation builds
+docs/build/
+docs/_build/
+
+# Ignore any compiled assets
+assets/compiled/
+assets/minified/
+
+# Ignore any local SSL certificates
+*.pem
+*.key
+*.crt
+*.csr
+
+# Ignore any local environment setup scripts
+setup_local.sh
+install_local.sh
