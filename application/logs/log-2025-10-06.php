@@ -47,3 +47,4 @@ ERROR - 2025-10-06 13:15:49 --> Severity: error --> Exception: Call to undefined
 ERROR - 2025-10-06 13:17:49 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Applications/XAMPP/xamppfiles/htdocs/lgnewsletter/application/libraries/BaseController.php:7) /Applications/XAMPP/xamppfiles/htdocs/lgnewsletter/system/core/Common.php 571
 ERROR - 2025-10-06 13:17:49 --> Severity: Compile Error --> Cannot declare class BaseController, because the name is already in use /Applications/XAMPP/xamppfiles/htdocs/lgnewsletter/application/libraries/BaseController.php 7
 ERROR - 2025-10-06 13:19:12 --> Severity: error --> Exception: Call to undefined function validation_errors() /Applications/XAMPP/xamppfiles/htdocs/lgnewsletter/application/views/newsletter/settings.php 37
+ERROR - 2025-10-06 22:26:34 --> 404 Page Not Found: 

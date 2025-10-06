@@ -76,7 +76,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
           <div class="navbar-header">
               <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
               <a href="javascript:void(0);" class="bars"></a>
-              <a class="navbar-brand" href="<?php echo site_url(); ?>">Light House Newsletter</a>
+              <a class="navbar-brand" href="<?php echo site_url(); ?>">Lighthouse Newsletter</a>
           </div>
 
           <div class="collapse navbar-collapse" id="navbar-collapse">
@@ -168,7 +168,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
           <!-- Footer -->
           <div class="legal">
               <div class="copyright">
-                  &copy; <?php echo date('Y'); ?> <a href="javascript:void(0);">Light House Newsletter</a>.
+                  &copy; <?php echo date('Y'); ?> <a href="javascript:void(0);">Lighthouse Newsletter</a>.
               </div>
 
           </div>

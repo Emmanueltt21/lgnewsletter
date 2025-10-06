@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Light House Newsletter | Admin Login</title>
+    <title>Lighthouse Newsletter | Admin Login</title>
     <!-- Favicon-->
     <link rel="icon" href="<?php echo asset_url('images/favicon.ico'); ?>" type="image/x-icon">
     <!-- Bootstrap Core Css -->
@@ -236,7 +236,7 @@
             <div class="lighthouse-icon">
                 <i class="material-icons">lightbulb_outline</i>
             </div>
-            <h1 class="lighthouse-title">Light House Newsletter</h1>
+            <h1 class="lighthouse-title">Lighthouse Newsletter</h1>
             <p class="lighthouse-subtitle">Guiding Light for Your Community</p>
         </div>
         
@@ -289,7 +289,7 @@
         </div>
         
         <div class="lighthouse-footer">
-            <p>&copy; 2024 Light House Newsletter. Spreading God's light in our community.</p>
+            <p>&copy; 2024 Lighthouse Newsletter. Spreading God's light in our community.</p>
         </div>
     </div>
 
