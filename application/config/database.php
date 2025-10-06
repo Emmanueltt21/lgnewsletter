@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 
 $db['default'] = array(
-'dsn' => 'mysql:host=localhost;dbname=lgnewsletter;unix_socket=/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock',
+'dsn' => 'mysql:host=localhost;dbname=u889622533_lgnewletter;unix_socket=/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock',
 	'hostname' => 'localhost',
-	'username' => 'rootuser',//'streamituser',
-	'password' => 'rootuser',
+	'username' => 'u889622533_lgnewletter',//'streamituser',
+	'password' => 'lgnewsLetter@300010',
 	'dbdriver' => 'pdo',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
