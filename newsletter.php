@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Newsletter Subscription - Lighthouse Global Missions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Become a Lighthouse Pillar - Lighthouse Global Missions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -15,14 +15,14 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            line-height: 1.7;
+            color: #2d3748;
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
             min-height: 100vh;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 2rem;
             min-height: 100vh;
@@ -33,100 +33,201 @@
 
         .subscription-card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
             overflow: hidden;
             width: 100%;
-            max-width: 600px;
+            max-width: 900px;
         }
 
         .header {
-            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            background: linear-gradient(135deg, #1a365d 0%, #3182ce 100%);
             color: white;
-            padding: 3rem 2rem;
+            padding: 4rem 3rem;
             text-align: center;
+        }
+
+        .lighthouse-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: #ffd700;
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            letter-spacing: -0.5px;
+            letter-spacing: -1px;
         }
 
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            font-weight: 300;
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         .content {
-            padding: 3rem 2rem;
+            padding: 4rem 3rem;
         }
 
         .intro {
-            text-align: center;
-            margin-bottom: 3rem;
+            text-align: left;
+            margin-bottom: 4rem;
         }
 
         .intro h2 {
-            font-size: 1.8rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
             font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 1rem;
-            letter-spacing: -0.3px;
+            color: #1a365d;
+            margin-bottom: 2rem;
+            letter-spacing: -0.5px;
+            text-align: center;
         }
 
-        .intro p {
-            font-size: 1rem;
-            color: #6b7280;
-            line-height: 1.7;
-            max-width: 500px;
-            margin: 0 auto;
+        .pillar-content {
+            display: grid;
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .pillar-section {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 2.5rem;
+            border-radius: 16px;
+            border-left: 5px solid #3182ce;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .pillar-section p {
+            font-size: 1.1rem;
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .pillar-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .scripture-quote {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            font-style: italic;
+            font-size: 1.1rem;
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .scripture-quote::before {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            opacity: 0.3;
+        }
+
+        .benefits-section {
+            background: linear-gradient(135deg, #ffd700 0%, #f6ad55 100%);
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .benefits-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #1a365d;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .benefit-item i {
+            font-size: 2rem;
+            color: #3182ce;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-item h4 {
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
         }
 
         .form-container {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 2rem;
-            border: 1px solid #e5e7eb;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #1a365d;
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .form-group label {
             display: block;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
         }
 
         .form-group input {
             width: 100%;
-            padding: 1rem;
-            border: 2px solid #e5e7eb;
+            padding: 1.2rem;
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 1rem;
             transition: all 0.3s ease;
             background: white;
+            font-family: 'Inter', sans-serif;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+            transform: translateY(-2px);
         }
 
         .form-group input.error {
-            border-color: #ef4444;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+            border-color: #e53e3e;
+            box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
         }
 
         .error-message {
-            color: #ef4444;
+            color: #e53e3e;
             font-size: 0.875rem;
             margin-top: 0.5rem;
             display: none;
@@ -134,22 +235,24 @@
 
         .submit-btn {
             width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
             color: white;
             border: none;
-            padding: 1.2rem 2rem;
+            padding: 1.5rem 2rem;
             border-radius: 12px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(49, 130, 206, 0.4);
         }
 
         .submit-btn:disabled {
@@ -181,30 +284,41 @@
             100% { transform: rotate(360deg); }
         }
 
-        .success-message, .error-alert {
-            padding: 1rem;
+        .success-message {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            color: white;
+            padding: 1.5rem;
             border-radius: 12px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             display: none;
+            text-align: center;
         }
 
-        .success-message {
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
+        .success-message i {
+            margin-right: 0.5rem;
         }
 
         .error-alert {
-            background: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: none;
+            text-align: center;
+        }
+
+        .error-alert i {
+            margin-right: 0.5rem;
         }
 
         .footer {
-            text-align: center;
+            background: #1a365d;
+            color: white;
             padding: 2rem;
-            color: #6b7280;
+            text-align: center;
             font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         @media (max-width: 768px) {
@@ -213,19 +327,31 @@
             }
 
             .header {
-                padding: 2rem 1.5rem;
+                padding: 3rem 2rem;
             }
 
             .header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .content {
-                padding: 2rem 1.5rem;
+                padding: 3rem 2rem;
             }
 
             .intro h2 {
-                font-size: 1.5rem;
+                font-size: 2rem;
+            }
+
+            .pillar-section {
+                padding: 2rem;
+            }
+
+            .form-container {
+                padding: 2rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -234,19 +360,68 @@
     <div class="container">
         <div class="subscription-card">
             <div class="header">
-                <h1><i class="fas fa-lighthouse"></i> Lighthouse Global Missions</h1>
-                <p>Stay connected with our ministry</p>
+                <div class="lighthouse-icon">
+                    <i class="fas fa-lighthouse"></i>
+                </div>
+                <h1>Become a Lighthouse Pillar</h1>
+                <p class="subtitle">Lighthouse Global Missions</p>
             </div>
 
             <div class="content">
                 <div class="intro">
                     <h2>GET CONNECTED, STAY UPDATED & GET INVOLVED</h2>
-                    <p>Join our community of believers and stay updated with ministry news, prophetic messages, upcoming events, and opportunities to get involved in God's work around the world.</p>
+                    
+                    <div class="pillar-content">
+                        <div class="pillar-section">
+                            <p>This is your invitation to join us at Lighthouse Global Missions as a valued member of our community of persons who are committed to stand with us in the work of the Lord as we fulfill His call to reach our world with His word, bringing many people into an experience of His power, discovery of their purpose and fulfilment of their destinies in Christ.</p>
+                        </div>
+
+                        <div class="scripture-quote">
+                            The one who is victorious I will make a pillar in the temple of my God
+                            <br><strong>- Revelation 3:12 NIV</strong>
+                        </div>
+
+                        <div class="pillar-section">
+                            <p>Paul wrote of "James, Peter, and John, who were known as pillars of the church" (See Galatians 2:9). These men were the sustaining force of the Church through their dedicated contributions. As a Lighthouse Pillar, you join a community of people who stand with us in prayer, in giving and in volunteering for this ministry as Lighthouse Global Missions. You also get to share in the blessings, graces and glory of God as He is revealing in our lives for our act of obedience to His call.</p>
+                        </div>
+
+                        <div class="pillar-section">
+                            <p>Pillars are very vital elements of support which give form and structure to an architectural edifice. They are strategically positioned columns that bear the weight of a structure to sustain it in its purpose and function. Pillars play a key role in contributing to the overall stability and beauty of the structure. And God desires to have you as a vital pillar in His plan, supporting, upholding and causing His purpose to be actualized.</p>
+                        </div>
+
+                        <div class="benefits-section">
+                            <h3>What You'll Receive as a Lighthouse Pillar</h3>
+                            <div class="benefits-grid">
+                                <div class="benefit-item">
+                                    <i class="fas fa-newspaper"></i>
+                                    <h4>Ministry Updates</h4>
+                                    <p>Stay informed about our global missions</p>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-praying-hands"></i>
+                                    <h4>Prophetic Words</h4>
+                                    <p>Receive timely prophetic messages</p>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-heart"></i>
+                                    <h4>Kingdom Missions</h4>
+                                    <p>Give with purpose towards God's work</p>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-users"></i>
+                                    <h4>Exclusive Events</h4>
+                                    <p>Join special partner events in Germany</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-container">
+                    <h3 class="form-title">Sign up for Lighthouse Global Missions Partners' Newsletter from Pastor Simon</h3>
+                    
                     <div class="success-message" id="successMessage">
-                        <i class="fas fa-check-circle"></i> Thank you for subscribing! Please check your email to confirm your subscription.
+                        <i class="fas fa-check-circle"></i> Thank you for becoming a Lighthouse Pillar! Please check your email to confirm your subscription.
                     </div>
 
                     <div class="error-alert" id="errorAlert">
@@ -276,7 +451,7 @@
                             <div class="loading" id="loading">
                                 <div class="spinner"></div>
                             </div>
-                            <span id="btnText">Subscribe Now</span>
+                            <span id="btnText">Become a Pillar</span>
                         </button>
                     </form>
                 </div>
@@ -334,7 +509,7 @@
             formData.append('last_name', lastName);
             formData.append('email', email);
             
-            fetch('process_subscription.php', {
+            fetch('process_subscription_simple.php', {
                 method: 'POST',
                 body: formData
             })
@@ -358,11 +533,12 @@
         function clearErrors() {
             const errorMessages = document.querySelectorAll('.error-message');
             const inputs = document.querySelectorAll('input');
-            const alerts = document.querySelectorAll('.success-message, .error-alert');
             
             errorMessages.forEach(msg => msg.style.display = 'none');
             inputs.forEach(input => input.classList.remove('error'));
-            alerts.forEach(alert => alert.style.display = 'none');
+            
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorAlert').style.display = 'none';
         }
         
         function showFieldError(fieldId, message) {
@@ -392,11 +568,11 @@
             
             if (show) {
                 loading.classList.add('active');
-                btnText.textContent = 'Subscribing...';
+                btnText.textContent = 'Joining...';
                 submitBtn.disabled = true;
             } else {
                 loading.classList.remove('active');
-                btnText.textContent = 'Subscribe Now';
+                btnText.textContent = 'Become a Pillar';
                 submitBtn.disabled = false;
             }
         }
