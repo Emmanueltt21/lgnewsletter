@@ -18,16 +18,38 @@
     <link href="<?php echo asset_url('css/style.css'); ?>" rel="stylesheet">
     
     <style>
+        /* Global reset for better cross-browser compatibility */
+        * {
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        
         .lighthouse-login-page {
             background: url('uploads/thumbnails/newsletter_background_login.png') center center no-repeat;
             background-size: cover;
             min-height: 100vh;
+            height: 100vh;
             display: flex;
+            display: -webkit-flex;
+            display: -ms-flexbox;
             align-items: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
             justify-content: center;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
             font-family: 'Inter', sans-serif;
             position: relative;
             overflow: hidden;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         .lighthouse-login-page::before {
@@ -45,14 +67,25 @@
         .lighthouse-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 20px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
             padding: 0;
             max-width: 420px;
             width: 90%;
+            min-width: 320px;
             overflow: hidden;
             position: relative;
             z-index: 1;
+            margin: 20px auto;
+            box-sizing: border-box;
+            /* Fallback centering for older browsers */
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
         }
         
         .lighthouse-header {
@@ -206,9 +239,24 @@
         }
         
         @media (max-width: 480px) {
+            .lighthouse-login-page {
+                padding: 10px;
+                box-sizing: border-box;
+            }
+            
             .lighthouse-container {
-                margin: 20px;
-                width: calc(100% - 40px);
+                margin: 10px auto;
+                width: calc(100% - 20px);
+                max-width: none;
+                min-width: auto;
+                /* Reset transform for mobile */
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                -webkit-transform: none;
+                -moz-transform: none;
+                -ms-transform: none;
             }
             
             .lighthouse-header {
@@ -221,6 +269,27 @@
             
             .lighthouse-title {
                 font-size: 24px;
+            }
+        }
+        
+        /* Additional browser-specific fixes */
+        @supports not (display: flex) {
+            .lighthouse-login-page {
+                display: table;
+                width: 100%;
+                height: 100vh;
+                table-layout: fixed;
+            }
+            
+            .lighthouse-container {
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
+                position: static;
+                transform: none;
+                -webkit-transform: none;
+                -moz-transform: none;
+                -ms-transform: none;
             }
         }
     </style>
