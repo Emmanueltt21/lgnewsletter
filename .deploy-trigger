@@ -1,0 +1,15 @@
+# Deployment Trigger
+# This file is used to trigger a complete redeployment of the Lighthouse Newsletter system
+# Timestamp: 2024-12-19 20:27:28 UTC
+# Reason: Force complete redeployment of all project files
+
+DEPLOYMENT_ID=lighthouse-newsletter-redeploy-$(date +%Y%m%d-%H%M%S)
+FORCE_REDEPLOY=true
+REDEPLOY_ALL_FILES=true
+
+# Changes included in this deployment:
+# - Newsletter subscription form functionality fixes
+# - Performance optimizations
+# - Project name corrections (Light House -> Lighthouse)
+# - Database connection improvements
+# - Email confirmation system enhancements
