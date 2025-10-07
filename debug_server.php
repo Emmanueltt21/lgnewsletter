@@ -5,10 +5,8 @@
  * Remove this file after debugging for security reasons
  */
 
-// Prevent direct access in production (optional safety check)
-if (!isset($_GET['debug']) || $_GET['debug'] !== 'true') {
-    die('Access denied. Add ?debug=true to access this script.');
-}
+// Debug script for server configuration troubleshooting
+// IMPORTANT: Remove this file after debugging for security reasons
 
 ?>
 <!DOCTYPE html>
