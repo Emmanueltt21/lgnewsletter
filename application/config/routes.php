@@ -417,6 +417,9 @@ $route['getTransactionsList3'] = 'payment/getTransactionsList3';
 
 
 
+// Public newsletter subscription page (no authentication required)
+$route['newsletter'] = 'public_newsletter/index';
+
 $route['logout'] = 'user/logout';
 //$route['(:any)'] = 'view/$1';
 $route['404_override'] = 'error_page';
