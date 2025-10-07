@@ -363,7 +363,7 @@
                 <div class="lighthouse-icon">
                     <i class="fas fa-lighthouse"></i>
                 </div>
-                <h1>Become a Lighthouse Pillar</h1>
+                <h1>Become a Lighthouse Pillar Partner in Kingdom Missions</h1>
                 <p class="subtitle">Lighthouse Global Missions</p>
             </div>
 
@@ -418,7 +418,7 @@
                 </div>
 
                 <div class="form-container">
-                    <h3 class="form-title">Sign up for Lighthouse Global Missions Partners' Newsletter from Pastor Simon</h3>
+                    <h3 class="form-title">Sign up for Lighthouse Global Missions Partner in Kingdom Missions' Newsletter</h3>
                     
                     <div class="success-message" id="successMessage">
                         <i class="fas fa-check-circle"></i> Thank you for becoming a Lighthouse Pillar! Please check your email to confirm your subscription.
@@ -451,7 +451,7 @@
                             <div class="loading" id="loading">
                                 <div class="spinner"></div>
                             </div>
-                            <span id="btnText">Become a Pillar</span>
+                            <span id="btnText">Submit</span>
                         </button>
                     </form>
                 </div>

@@ -13,9 +13,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 | WARNING: You MUST set this value!
 |
-| If it is not set, then CodeIgniter will try guess the protocol and path
-| your installation, but due to security concerns the hostname will be set
-| to $_SERVER['SERVER_ADDR'] if available, or localhost otherwise.
+| If it is not set, then CodeIgniter will try to guess the protocol and
+| path to your installation, but due to security concerns the hostname will
+| be set to $_SERVER['SERVER_ADDR'] if available, or localhost otherwise.
 | The auto-detection mechanism exists only for convenience during
 | development and MUST NOT be used in production!
 |
@@ -65,7 +65,6 @@ if (php_sapi_name() === 'cli' || !isset($_SERVER['HTTP_HOST'])) {
 |
 */
 $config['index_page'] = '';
-
 
 /*
 |--------------------------------------------------------------------------
@@ -166,10 +165,7 @@ $config['subclass_prefix'] = 'MY_';
 | Note: This will NOT disable or override the CodeIgniter-specific
 |	autoloading (application/config/autoload.php)
 */
-// $config['composer_autoload'] = FALSE;
-
-$config['composer_autoload'] = FCPATH . 'vendor/autoload.php';
-
+$config['composer_autoload'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -191,7 +187,7 @@ $config['composer_autoload'] = FCPATH . 'vendor/autoload.php';
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-@\=';
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 
 /*
 |--------------------------------------------------------------------------
@@ -256,7 +252,7 @@ $config['allow_get_array'] = TRUE;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 1;
+$config['log_threshold'] = 0;
 
 /*
 |--------------------------------------------------------------------------
@@ -267,7 +263,7 @@ $config['log_threshold'] = 1;
 | application/logs/ directory. Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = APPPATH.'logs/';
+$config['log_path'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -338,10 +334,10 @@ $config['cache_path'] = '';
 |
 |	FALSE      = Disabled
 |	TRUE       = Enabled, take all query parameters into account.
-|	             Please be aware that this may result in numerous cache
-|	             files generated for the same page over and over again.
+|	           Please be aware that this may result in numerous cache
+|	           files generated for the same page over and over again.
 |	array('q') = Enabled, but only take into account the specified list
-|	             of query parameters.
+|	           of query parameters.
 |
 */
 $config['cache_query_string'] = FALSE;
@@ -413,7 +409,7 @@ $config['encryption_key'] = '';
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'ci_session';
 $config['sess_expiration'] = 7200;
-$config['sess_save_path'] = sys_get_temp_dir();
+$config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
@@ -554,5 +550,3 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
-$config['purchase-from'] = "codecanyon"; //update to envisionapps, if you purchased directly from us.
-//$config["purchase-code"] = "4506cf15-ccd0-4256-b794-29f4c19c678e";
