@@ -73,19 +73,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
+// EXAMPLE CONFIGURATION - Copy this file to database.php and update with your settings
 
 $db['default'] = array(
-	'dsn' => '',
-	/* 'hostname' => 'localhost',
-	'username' => 'rootuser',//'streamituser',
-	'password' => 'rootuser',
-	'database' => 'lgnewsletter', */
-	'dbdriver' => 'mysqli',
-/* 'dsn' => 'mysql:host=localhost;dbname=u889622533_lgnewletter;unix_socket=/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock', */
+	// For local development (XAMPP/MAMP):
+	'dsn' => 'mysql:host=localhost;dbname=lgnewsletter;unix_socket=/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock',
 	'hostname' => 'localhost',
-	'username' => 'u889622533_lgnewletter',//'streamituser',
-	'password' => 'lgnewsLetter@300010',
- 	/* 'dbdriver' => 'pdo', */
+	'username' => 'root',
+	'password' => '',
+	'database' => 'lgnewsletter',
+	
+	// For production server:
+	// 'dsn' => '',
+	// 'hostname' => 'your_production_host',
+	// 'username' => 'your_production_username',
+	// 'password' => 'your_production_password',
+	// 'database' => 'your_production_database',
+	
+	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
