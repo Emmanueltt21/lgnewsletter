@@ -77,15 +77,8 @@
             overflow: hidden;
             position: relative;
             z-index: 1;
-            margin: 20px auto;
+            margin: 20px;
             box-sizing: border-box;
-            /* Fallback centering for older browsers */
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            -webkit-transform: translate(-50%, -50%);
-            -moz-transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
         }
         
         .lighthouse-header {
