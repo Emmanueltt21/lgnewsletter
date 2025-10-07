@@ -76,7 +76,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
           <div class="navbar-header">
               <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
               <a href="javascript:void(0);" class="bars"></a>
-              <a class="navbar-brand" href="<?php echo site_url(); ?>">Lighthouse Newsletter</a>
+              <a class="navbar-brand" href="<?php echo site_url(); ?>">Lighthouse NewsletterX</a>
           </div>
 
           <div class="collapse navbar-collapse" id="navbar-collapse">
