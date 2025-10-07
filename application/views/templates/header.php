@@ -126,7 +126,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                   </li>
 
                   <li <?php if (strpos($url,'newsletter') !== false && strpos($url,'newsletter/email_history') === false && strpos($url,'newsletter/settings') === false){ ?> class="active" <?php } ?>>
-                      <a href="<?php echo base_url(); ?>newsletter">
+                      <a href="<?php echo base_url(); ?>newsletter/index">
                           <i class="material-icons">email</i>
                           <span>Newsletter</span>
                       </a>
