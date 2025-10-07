@@ -76,11 +76,16 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn' => '',
-	'hostname' => 'localhost',
+	/* 'hostname' => 'localhost',
 	'username' => 'rootuser',//'streamituser',
 	'password' => 'rootuser',
-	'database' => 'lgnewsletter',
+	'database' => 'lgnewsletter', */
 	'dbdriver' => 'mysqli',
+/* 'dsn' => 'mysql:host=localhost;dbname=u889622533_lgnewletter;unix_socket=/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock', */
+	'hostname' => 'localhost',
+	'username' => 'u889622533_lgnewletter',//'streamituser',
+	'password' => 'lgnewsLetter@300010',
+ 	/* 'dbdriver' => 'pdo', */
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
