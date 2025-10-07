@@ -75,11 +75,12 @@ $query_builder = TRUE;
 
 
 $db['default'] = array(
-'dsn' => 'mysql:host=localhost;dbname=lgnewsletter;unix_socket=/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock',
+	'dsn' => '',
 	'hostname' => 'localhost',
 	'username' => 'rootuser',//'streamituser',
 	'password' => 'rootuser',
-	'dbdriver' => 'pdo',
+	'database' => 'lgnewsletter',
+	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
