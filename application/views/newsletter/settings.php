@@ -41,7 +41,7 @@
                             </div>
                         <?php endif; ?>
 
-                        <form method="post" action="<?php echo base_url('newsletter/save_settings'); ?>">
+                        <form method="post" action="<?php echo base_url('newsletter/settings'); ?>">
                             <!-- Email Configuration -->
                             <div class="row clearfix">
                                 <div class="col-sm-12">
@@ -244,7 +244,7 @@
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-primary waves-effect">
                                         <i class="material-icons">save</i>
-                                        SAVE SETTINGS
+                                        UPDATE SETTINGS
                                     </button>
                                     <button type="button" class="btn btn-info waves-effect" onclick="testEmailSettings()">
                                         <i class="material-icons">email</i>
@@ -268,7 +268,29 @@
 function testEmailSettings() {
     var testEmail = prompt('Enter email address to send test email:');
     if (testEmail && testEmail.trim() !== '') {
-        window.location.href = '<?php echo base_url('newsletter/test_email_settings'); ?>?email=' + encodeURIComponent(testEmail);
+        // Get form data
+        var formData = new FormData(document.getElementById('settingsForm'));
+        formData.append('test_email', testEmail);
+        
+        // Show loading message
+        alert('Sending test email... Please wait.');
+        
+        // Send AJAX request
+        fetch('<?php echo base_url('newsletter/test_email_settings'); ?>', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Success: ' + data.message);
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Error: Failed to send test email. Please check your settings.');
+        });
     }
 }
 </script>

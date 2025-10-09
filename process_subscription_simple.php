@@ -1,4 +1,6 @@
 <?php
+session_start(); // Start session for rate limiting
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -12,6 +14,17 @@ function sendResponse($success, $message, $data = null) {
         'data' => $data
     ]);
     exit;
+}
+
+// Rate limiting to prevent rapid submissions
+$current_time = time();
+$rate_limit_key = 'last_submission_' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+
+if (isset($_SESSION[$rate_limit_key])) {
+    $time_since_last = $current_time - $_SESSION[$rate_limit_key];
+    if ($time_since_last < 5) { // 5 seconds minimum between submissions
+        sendResponse(false, 'Please wait a moment before submitting again.');
+    }
 }
 
 // Validate request method
@@ -69,7 +82,7 @@ try {
     
     if ($existing) {
         if ($existing['status'] === 'confirmed') {
-            sendResponse(false, "You're already subscribed to our newsletter.");
+            sendResponse(false, "This email address has already subscribed to this newsletter.");
         } elseif ($existing['status'] === 'pending') {
             // Resend confirmation email
             $confirmation_token = $existing['confirmation_token'];
@@ -129,6 +142,9 @@ try {
         if ($result) {
             $subscriber_id = $pdo->lastInsertId();
             
+            // Update session with successful submission time
+            $_SESSION[$rate_limit_key] = $current_time;
+            
             if (sendConfirmationEmail($email, $first_name, $confirmation_token)) {
                 sendResponse(true, "Thank you for becoming a Lighthouse Pillar! Please check your email to confirm your subscription.");
             } else {
@@ -149,10 +165,78 @@ try {
     sendResponse(false, "An error occurred while processing your subscription. Please try again.");
 }
 
+// Function to get SMTP settings from database
+function getSmtpSettings() {
+    try {
+        // Database configuration (matching database.php)
+        $dsn = 'mysql:host=localhost;dbname=lgnewsletter;unix_socket=/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock';
+        $username = 'root';
+        $password = '';
+        
+        $pdo = new PDO($dsn, $username, $password, array(
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+        ));
+        
+        // Get SMTP settings from database
+        $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM newsletter_settings WHERE setting_key IN ('smtp_host', 'smtp_port', 'smtp_username', 'smtp_password', 'smtp_encryption', 'sender_name', 'sender_email')");
+        $stmt->execute();
+        
+        $settings = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $settings[$row['setting_key']] = $row['setting_value'];
+        }
+        
+        return $settings;
+    } catch (Exception $e) {
+        // Return default settings if database query fails
+        return array(
+            'smtp_host' => 'smtp.gmail.com',
+            'smtp_port' => '587',
+            'smtp_username' => 'your-email@gmail.com',
+            'smtp_password' => 'your-password',
+            'smtp_encryption' => 'tls',
+            'sender_name' => 'Lighthouse Global Missions',
+            'sender_email' => 'noreply@lgmissions.org'
+        );
+    }
+}
+
 function sendConfirmationEmail($email, $first_name, $confirmation_token) {
     try {
-        $to = $email;
-        $subject = "Confirm your subscription to Lighthouse Global Missions Newsletter";
+        // Get SMTP settings from database
+        $smtpSettings = getSmtpSettings();
+        
+        if (!$smtpSettings) {
+            error_log("Failed to retrieve SMTP settings from database");
+            return false;
+        }
+        
+        // Use PHPMailer for better SMTP support
+        require_once(dirname(__FILE__) . '/application/third_party/phpmailer/class.phpmailer.php');
+        require_once(dirname(__FILE__) . '/application/third_party/phpmailer/class.smtp.php');
+        
+        $mail = new PHPMailer();
+        
+        // Enable debug output for troubleshooting (disable in production)
+        // $mail->SMTPDebug = 2;
+        // $mail->Debugoutput = 'error_log';
+        
+        // SMTP configuration from database
+        $mail->IsSMTP();
+        $mail->Host = $smtpSettings['smtp_host'];
+        $mail->SMTPAuth = true;
+        $mail->Username = $smtpSettings['smtp_username'];
+        $mail->Password = $smtpSettings['smtp_password'];
+        $mail->SMTPSecure = $smtpSettings['smtp_encryption'];
+        $mail->Port = (int)$smtpSettings['smtp_port'];
+        
+        // Email settings
+        $mail->SetFrom($smtpSettings['sender_email'], $smtpSettings['sender_name']);
+        $mail->AddAddress($email, $first_name);
+        $mail->IsHTML(true);
+        $mail->Subject = 'Confirm your subscription to Lighthouse Global Missions Newsletter';
+        
         $confirmation_url = "http://localhost:8080/confirm_subscription.php?token=" . $confirmation_token;
         
         $message = "
@@ -200,14 +284,25 @@ function sendConfirmationEmail($email, $first_name, $confirmation_token) {
         </html>
         ";
         
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        $headers .= "From: Lighthouse Global Missions <noreply@lighthouseglobalmissions.org>" . "\r\n";
+        $mail->Body = $message;
         
-        return mail($to, $subject, $message, $headers);
+        $result = $mail->Send();
+        
+        if (!$result) {
+            error_log("Email sending failed: " . $mail->ErrorInfo);
+            error_log("SMTP Host: " . $smtpSettings['smtp_host']);
+            error_log("SMTP Port: " . $smtpSettings['smtp_port']);
+            error_log("SMTP Username: " . $smtpSettings['smtp_username']);
+            error_log("SMTP Encryption: " . $smtpSettings['smtp_encryption']);
+        } else {
+            error_log("Email sent successfully to: " . $email);
+        }
+        
+        return $result;
         
     } catch (Exception $e) {
         error_log("Email sending error: " . $e->getMessage());
+        error_log("Stack trace: " . $e->getTraceAsString());
         return false;
     }
 }

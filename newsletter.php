@@ -464,8 +464,15 @@
     </div>
 
     <script>
+        let isSubmitting = false; // Flag to prevent double submission
+        
         document.getElementById('subscriptionForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Prevent double submission
+            if (isSubmitting) {
+                return;
+            }
             
             // Reset previous errors
             clearErrors();
@@ -500,7 +507,8 @@
                 return;
             }
             
-            // Show loading state
+            // Set submission flag and show loading state
+            isSubmitting = true;
             showLoading(true);
             
             // Submit form via AJAX
@@ -515,6 +523,7 @@
             })
             .then(response => response.json())
             .then(data => {
+                isSubmitting = false; // Reset submission flag
                 showLoading(false);
                 
                 if (data.success) {
@@ -525,6 +534,7 @@
                 }
             })
             .catch(error => {
+                isSubmitting = false; // Reset submission flag
                 showLoading(false);
                 showError('Network error. Please check your connection and try again.');
             });

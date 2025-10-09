@@ -4,6 +4,7 @@
  * Class : BaseController
  * Base Class to control over all the classes
  */
+if (!class_exists('BaseController')) {
 class BaseController extends CI_Controller {
 
 	protected $data = [];
@@ -271,5 +272,6 @@ class BaseController extends CI_Controller {
 	 //var_dump($r); die;
 	 //echo $this->email->print_debugger(); die;
 	 return $r;
+}
 }
 }

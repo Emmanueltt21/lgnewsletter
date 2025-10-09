@@ -407,7 +407,14 @@ class Newsletter_model extends CI_Model {
     }
 
     public function get_all_settings() {
-        return $this->db->get('newsletter_settings')->result();
+        $settings_raw = $this->db->get('newsletter_settings')->result();
+        
+        $settings = [];
+        foreach ($settings_raw as $setting) {
+            $settings[$setting->setting_key] = $setting->setting_value;
+        }
+        
+        return $settings;
     }
 
     public function get_setting($key) {

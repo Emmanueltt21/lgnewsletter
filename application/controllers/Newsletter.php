@@ -141,12 +141,13 @@ class Newsletter extends BaseController {
 
     // Process settings form
     private function process_settings_form() {
-        // Set validation rules
-        $this->form_validation->set_rules('sender_email', 'Sender Email', 'required|valid_email');
-        $this->form_validation->set_rules('sender_name', 'Sender Name', 'required');
+        // Set validation rules to match actual form field names
+        $this->form_validation->set_rules('from_email', 'From Email', 'required|valid_email');
+        $this->form_validation->set_rules('from_name', 'From Name', 'required');
         $this->form_validation->set_rules('smtp_host', 'SMTP Host', 'required');
         $this->form_validation->set_rules('smtp_port', 'SMTP Port', 'required|numeric');
         $this->form_validation->set_rules('smtp_username', 'SMTP Username', 'required');
+        $this->form_validation->set_rules('smtp_password', 'SMTP Password', 'required');
         
         if ($this->form_validation->run() == FALSE) {
             // Validation failed, redirect back with errors
@@ -161,7 +162,7 @@ class Newsletter extends BaseController {
                 }
             }
             
-            $this->session->set_flashdata('success', 'Settings updated successfully');
+            $this->session->set_flashdata('success', 'Newsletter settings have been updated successfully!');
             redirect('newsletter/settings');
         }
     }
@@ -215,7 +216,8 @@ class Newsletter extends BaseController {
     // Test email settings
     public function test_email_settings() {
         if (!$this->input->post('test_email')) {
-            show_404();
+            echo json_encode(['success' => false, 'message' => 'Test email address is required']);
+            return;
         }
         
         // Get SMTP settings from POST
@@ -236,15 +238,65 @@ class Newsletter extends BaseController {
         $this->email->initialize($smtp_config);
         
         // Send test email
-        $this->email->from($this->input->post('sender_email'), $this->input->post('sender_name'));
-        $this->email->to($this->input->post('sender_email')); // Send to sender email for testing
+        $this->email->from($this->input->post('from_email'), $this->input->post('from_name'));
+        $this->email->to($this->input->post('test_email')); // Send to the test email address
         $this->email->subject('Newsletter System - Test Email');
         $this->email->message('<h2>Test Email Successful!</h2><p>Your SMTP settings are working correctly.</p>');
         
         if ($this->email->send()) {
-            echo json_encode(['success' => true, 'message' => 'Test email sent successfully']);
+            echo json_encode(['success' => true, 'message' => 'Test email sent successfully to ' . $this->input->post('test_email')]);
         } else {
-            echo json_encode(['success' => false, 'message' => $this->email->print_debugger()]);
+            echo json_encode(['success' => false, 'message' => 'Failed to send test email: ' . $this->email->print_debugger()]);
+        }
+    }
+
+    // Delete subscriber
+    public function delete_subscriber() {
+        // Set content type to JSON
+        header('Content-Type: application/json');
+        
+        // Get JSON input
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (!isset($input['id']) || empty($input['id'])) {
+            echo json_encode(['success' => false, 'message' => 'Subscriber ID is required']);
+            return;
+        }
+        
+        $subscriber_id = $input['id'];
+        
+        // Delete subscriber using model
+        $result = $this->Newsletter_model->delete_subscriber($subscriber_id);
+        
+        if ($result) {
+            echo json_encode(['success' => true, 'message' => 'Subscriber deleted successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to delete subscriber']);
+        }
+    }
+
+    // Bulk delete subscribers
+    public function bulk_delete_subscribers() {
+        // Set content type to JSON
+        header('Content-Type: application/json');
+        
+        // Get JSON input
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (!isset($input['ids']) || empty($input['ids']) || !is_array($input['ids'])) {
+            echo json_encode(['success' => false, 'message' => 'Subscriber IDs are required']);
+            return;
+        }
+        
+        $subscriber_ids = $input['ids'];
+        
+        // Delete subscribers using model
+        $result = $this->Newsletter_model->delete_subscribers($subscriber_ids);
+        
+        if ($result) {
+            echo json_encode(['success' => true, 'message' => count($subscriber_ids) . ' subscribers deleted successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to delete subscribers']);
         }
     }
 }
