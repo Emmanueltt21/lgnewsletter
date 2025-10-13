@@ -65,6 +65,27 @@
                             </div>
 
                             <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="sender_name" name="sender_name" class="form-control" 
+                                                   value="<?php echo isset($newsletter) ? htmlspecialchars($newsletter->sender_name) : (isset($settings['sender_name']) ? htmlspecialchars($settings['sender_name']) : ''); ?>" required>
+                                            <label class="form-label">Sender Name</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="email" id="sender_email" name="sender_email" class="form-control" 
+                                                   value="<?php echo isset($newsletter) ? htmlspecialchars($newsletter->sender_email) : (isset($settings['sender_email']) ? htmlspecialchars($settings['sender_email']) : ''); ?>" required>
+                                            <label class="form-label">Sender Email</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="content">Newsletter Content</label>

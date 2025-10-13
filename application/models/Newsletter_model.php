@@ -267,7 +267,15 @@ class Newsletter_model extends CI_Model {
             // Prepare email content
             $email_content = $this->prepare_newsletter_content($newsletter, $subscriber, $settings);
             
-            $this->email->from($newsletter->sender_email, $newsletter->sender_name);
+            // Fallback to settings sender details if newsletter lacks them
+            $from_email = (!empty($newsletter->sender_email) && filter_var($newsletter->sender_email, FILTER_VALIDATE_EMAIL)) 
+                ? $newsletter->sender_email 
+                : (isset($settings['sender_email']) ? $settings['sender_email'] : null);
+            $from_name = !empty($newsletter->sender_name) 
+                ? $newsletter->sender_name 
+                : (isset($settings['sender_name']) ? $settings['sender_name'] : '');
+
+            $this->email->from($from_email, $from_name);
             $this->email->to($subscriber->email);
             $this->email->subject($newsletter->subject);
             $this->email->message($email_content);

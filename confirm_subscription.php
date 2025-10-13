@@ -1,14 +1,6 @@
 <?php
-// Include CodeIgniter bootstrap
-require_once 'index.php';
-
-// Get CodeIgniter instance
-$CI =& get_instance();
-
-// Load necessary libraries and models
-$CI->load->database();
-$CI->load->library('email');
-$CI->load->helper('url');
+// Include the NewsletterWrapper class
+require_once 'newsletter_wrapper.php';
 
 // Get confirmation token from URL
 $token = $_GET['token'] ?? '';
@@ -19,110 +11,63 @@ if (empty($token)) {
 }
 
 try {
-    // Find subscriber with this token
-    $subscriber = $CI->db->get_where('newsletter_subscribers', [
-        'confirmation_token' => $token,
-        'status' => 'pending'
-    ])->row();
+    // Initialize the newsletter wrapper
+    $newsletterWrapper = new NewsletterWrapper();
     
-    if (!$subscriber) {
-        showErrorPage('Invalid or expired confirmation link');
+    // Confirm the subscription
+    $result = $newsletterWrapper->confirmSubscription($token);
+    
+    if (!$result['success']) {
+        showErrorPage($result['message']);
         exit;
     }
     
-    // Update subscriber status to confirmed
-    $update_data = [
-        'status' => 'confirmed',
-        'confirmed_at' => date('Y-m-d H:i:s'),
-        'confirmation_token' => null
-    ];
-    
-    $CI->db->where('id', $subscriber->id);
-    $CI->db->update('newsletter_subscribers', $update_data);
+    // Get subscriber data
+    $subscriber = $result['data'];
     
     // Send welcome email
-    if (sendWelcomeEmail($subscriber->email, $subscriber->first_name)) {
+    if (sendWelcomeEmail($subscriber['email'], $subscriber['first_name'], $newsletterWrapper)) {
         // Log welcome email
-        logEmailHistory($subscriber->id, $subscriber->email, $subscriber->first_name . ' ' . $subscriber->last_name, 'Welcome to Lighthouse Global Missions!', 'welcome');
+        $newsletterWrapper->logEmailHistory(
+            $subscriber['subscriber_id'], 
+            $subscriber['email'], 
+            $subscriber['first_name'] . ' ' . $subscriber['last_name'], 
+            'Welcome to Lighthouse Global Missions!', 
+            'welcome'
+        );
     }
     
     // Show success page
-    showSuccessPage($subscriber->first_name);
+    showSuccessPage($subscriber['first_name']);
     
 } catch (Exception $e) {
     error_log("Confirmation error: " . $e->getMessage());
     showErrorPage('An error occurred while confirming your subscription');
 }
 
-function sendWelcomeEmail($email, $first_name) {
-    global $CI;
-    
+function sendWelcomeEmail($email, $first_name, $newsletterWrapper) {
     try {
         // Get email settings
-        $settings = getEmailSettings();
+        $settings = $newsletterWrapper->getEmailSettings();
         
-        // Configure email
-        $config = [
-            'protocol' => 'smtp',
-            'smtp_host' => $settings['smtp_host'],
-            'smtp_port' => $settings['smtp_port'],
-            'smtp_user' => $settings['smtp_username'],
-            'smtp_pass' => $settings['smtp_password'],
-            'smtp_crypto' => $settings['smtp_encryption'],
-            'mailtype' => 'html',
-            'charset' => 'utf-8',
-            'newline' => "\r\n"
+        // Use PHPMailer or mail() function for sending email
+        $subject = $settings['welcome_subject'] ?? 'Welcome to Lighthouse Global Missions!';
+        $message = getWelcomeEmailTemplate($first_name, $settings['email_signature'] ?? 'Blessings, Pastor Simon Mungwa');
+        
+        $headers = [
+            'MIME-Version: 1.0',
+            'Content-type: text/html; charset=UTF-8',
+            'From: ' . ($settings['sender_name'] ?? 'Lighthouse Global Missions') . ' <' . ($settings['sender_email'] ?? 'info@lgmissions.org') . '>',
+            'Reply-To: ' . ($settings['sender_email'] ?? 'info@lgmissions.org'),
+            'X-Mailer: PHP/' . phpversion()
         ];
         
-        $CI->email->initialize($config);
-        
-        // Email content
-        $subject = $settings['welcome_subject'];
-        $message = getWelcomeEmailTemplate($first_name, $settings['email_signature']);
-        
-        $CI->email->from($settings['sender_email'], $settings['sender_name']);
-        $CI->email->to($email);
-        $CI->email->subject($subject);
-        $CI->email->message($message);
-        
-        return $CI->email->send();
+        return mail($email, $subject, $message, implode("\r\n", $headers));
         
     } catch (Exception $e) {
         error_log("Welcome email error: " . $e->getMessage());
         return false;
     }
-}
-
-function getEmailSettings() {
-    global $CI;
-    
-    $settings_query = $CI->db->get('newsletter_settings');
-    $settings_raw = $settings_query->result_array();
-    
-    $settings = [];
-    foreach ($settings_raw as $setting) {
-        $settings[$setting['setting_key']] = $setting['setting_value'];
-    }
-    
-    return $settings;
-}
-
-function logEmailHistory($subscriber_id, $recipient_email, $recipient_name, $subject, $email_type, $newsletter_id = null) {
-    global $CI;
-    
-    $history_data = [
-        'recipient_email' => $recipient_email,
-        'recipient_name' => $recipient_name,
-        'subject' => $subject,
-        'email_type' => $email_type,
-        'newsletter_id' => $newsletter_id,
-        'subscriber_id' => $subscriber_id,
-        'status' => 'sent',
-        'sent_at' => date('Y-m-d H:i:s'),
-        'created_at' => date('Y-m-d H:i:s')
-    ];
-    
-    $CI->db->insert('email_history', $history_data);
 }
 
 function getWelcomeEmailTemplate($first_name, $signature) {

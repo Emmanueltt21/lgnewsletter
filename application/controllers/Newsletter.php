@@ -142,8 +142,8 @@ class Newsletter extends BaseController {
     // Process settings form
     private function process_settings_form() {
         // Set validation rules to match actual form field names
-        $this->form_validation->set_rules('from_email', 'From Email', 'required|valid_email');
-        $this->form_validation->set_rules('from_name', 'From Name', 'required');
+        $this->form_validation->set_rules('sender_email', 'Sender Email', 'required|valid_email');
+        $this->form_validation->set_rules('sender_name', 'Sender Name', 'required');
         $this->form_validation->set_rules('smtp_host', 'SMTP Host', 'required');
         $this->form_validation->set_rules('smtp_port', 'SMTP Port', 'required|numeric');
         $this->form_validation->set_rules('smtp_username', 'SMTP Username', 'required');
@@ -238,7 +238,7 @@ class Newsletter extends BaseController {
         $this->email->initialize($smtp_config);
         
         // Send test email
-        $this->email->from($this->input->post('from_email'), $this->input->post('from_name'));
+        $this->email->from($this->input->post('sender_email'), $this->input->post('sender_name'));
         $this->email->to($this->input->post('test_email')); // Send to the test email address
         $this->email->subject('Newsletter System - Test Email');
         $this->email->message('<h2>Test Email Successful!</h2><p>Your SMTP settings are working correctly.</p>');
