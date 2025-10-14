@@ -551,7 +551,7 @@ class Newsletter_model extends CI_Model {
             <div class='container'>
                 <div class='header'>
                     <img src='" . base_url() . "assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
-                    <h1>🏮 Lighthouse Global Missions</h1>
+                    <h1> Lighthouse Global Missions</h1>
                     <p>Ministry Updates & News</p>
                 </div>
                 <div class='content'>
@@ -589,7 +589,7 @@ class Newsletter_model extends CI_Model {
             <div class='container'>
                 <div class='header'>
                     <img src='" . base_url() . "assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
-                    <h1>🏮 Lighthouse Global Missions</h1>
+                    <h1> Lighthouse Global Missions</h1>
                     <p>Confirm Your Subscription</p>
                 </div>
                 <div class='content'>
