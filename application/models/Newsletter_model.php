@@ -217,6 +217,37 @@ class Newsletter_model extends CI_Model {
         return $this->db->trans_status();
     }
 
+    // Admin helper: resolve admin_users.id by email
+    public function get_admin_id_by_email($email) {
+        if (empty($email)) {
+            return null;
+        }
+        $admin = $this->db->select('id')->get_where('admin_users', ['email' => $email])->row();
+        return $admin ? (int)$admin->id : null;
+    }
+
+    // Admin helper: get a default active admin id (fallback)
+    public function get_default_admin_id() {
+        // Prefer super_admins, otherwise any active admin
+        $admin = $this->db
+            ->select('id')
+            ->where('status', 'active')
+            ->where('role', 'super_admin')
+            ->order_by('id', 'ASC')
+            ->get('admin_users')
+            ->row();
+        if ($admin) {
+            return (int)$admin->id;
+        }
+        $admin = $this->db
+            ->select('id')
+            ->where('status', 'active')
+            ->order_by('id', 'ASC')
+            ->get('admin_users')
+            ->row();
+        return $admin ? (int)$admin->id : null;
+    }
+
     public function get_newsletter_stats() {
         $stats = new stdClass();
         

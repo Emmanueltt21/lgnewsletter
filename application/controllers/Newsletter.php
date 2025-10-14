@@ -23,7 +23,10 @@ class Newsletter extends BaseController {
         $data['newsletters'] = $this->Newsletter_model->get_newsletters();
         $data['stats'] = $this->Newsletter_model->get_newsletter_stats();
         
-        $this->load->template('newsletter/manage', $data);
+        // Render using standard views to avoid loader method diagnostics
+        $this->load->view('templates/header', $data);
+        $this->load->view('newsletter/manage', $data);
+        $this->load->view('templates/footer', $data);
     }
 
     // Compose newsletter
@@ -36,7 +39,10 @@ class Newsletter extends BaseController {
             $this->process_newsletter_form($id);
         }
         
-        $this->load->template('newsletter/compose', $data);
+        // Render using standard views to avoid loader method diagnostics
+        $this->load->view('templates/header', $data);
+        $this->load->view('newsletter/compose', $data);
+        $this->load->view('templates/footer', $data);
     }
 
     // Process newsletter form
@@ -45,13 +51,35 @@ class Newsletter extends BaseController {
         $content = $this->input->post('content');
         $action = $this->input->post('action');
         
+        // Resolve created_by to a valid admin_users.id (or NULL if unknown)
+        $sessionUser = $this->session->userdata('userId');
+        $createdBy = null;
+        if (is_numeric($sessionUser)) {
+            $createdBy = (int)$sessionUser;
+        } elseif (!empty($sessionUser)) {
+            // If session stores email, look up corresponding admin user ID
+            $createdBy = $this->Newsletter_model->get_admin_id_by_email($sessionUser);
+        }
+
+        // If no admin ID found by session, fallback to a default active admin
+        if ($createdBy === null) {
+            $createdBy = $this->Newsletter_model->get_default_admin_id();
+        }
+
+        // If still no admin ID, abort cleanly with a helpful error
+        if ($createdBy === null) {
+            $this->session->set_flashdata('error', 'No active admin found to attribute this newsletter. Please ensure an admin exists in Admin Users.');
+            redirect('newsletter/index');
+            return;
+        }
+
         $newsletter_data = [
             'subject' => $subject,
             'content' => $content,
             'sender_name' => $this->input->post('sender_name'),
             'sender_email' => $this->input->post('sender_email'),
             'status' => ($action === 'send') ? 'sent' : 'draft',
-            'created_by' => $this->session->userdata('userId')
+            'created_by' => $createdBy
         ];
         
         if ($id) {
@@ -66,15 +94,12 @@ class Newsletter extends BaseController {
         
         if ($action === 'send') {
             $this->send($newsletter_id);
+            return;
         }
-        
+
         $message = $id ? 'Newsletter updated successfully' : 'Newsletter created successfully';
-        if ($action === 'send') {
-            $message .= ' and sent to subscribers';
-        }
-        
         $this->session->set_flashdata('success', $message);
-        redirect('newsletter');
+        redirect('newsletter/index');
     }
 
     // Send newsletter
@@ -84,7 +109,7 @@ class Newsletter extends BaseController {
         
         if (!$newsletter || !$subscribers) {
             $this->session->set_flashdata('error', 'Newsletter or subscribers not found');
-            redirect('newsletter');
+            redirect('newsletter/index');
         }
         
         $sent_count = 0;
@@ -105,13 +130,10 @@ class Newsletter extends BaseController {
             'recipients_count' => $sent_count
         ]);
         
-        $message = "Newsletter sent successfully to {$sent_count} subscribers";
-        if ($failed_count > 0) {
-            $message .= " ({$failed_count} failed)";
-        }
-        
+        // Use the exact message specified
+        $message = 'Newsletter successfully sent';
         $this->session->set_flashdata('success', $message);
-        redirect('newsletter');
+        redirect('newsletter/index');
     }
 
     // Email history
@@ -119,7 +141,10 @@ class Newsletter extends BaseController {
         $data['title'] = 'Email History';
         $data['emails'] = $this->Newsletter_model->get_email_history();
         
-        $this->load->template('newsletter/email_history', $data);
+        // Render using standard views to avoid loader method diagnostics
+        $this->load->view('templates/header', $data);
+        $this->load->view('newsletter/email_history', $data);
+        $this->load->view('templates/footer', $data);
     }
 
     // Alias for email_history (backward compatibility)
@@ -136,7 +161,10 @@ class Newsletter extends BaseController {
             $this->process_settings_form();
         }
         
-        $this->load->template('newsletter/settings', $data);
+        // Render using standard views to avoid loader method diagnostics
+        $this->load->view('templates/header', $data);
+        $this->load->view('newsletter/settings', $data);
+        $this->load->view('templates/footer', $data);
     }
 
     // Process settings form
@@ -174,8 +202,8 @@ class Newsletter extends BaseController {
         } else {
             $this->session->set_flashdata('error', 'Error deleting newsletter');
         }
-        
-        redirect('newsletter');
+
+        redirect('newsletter/index');
     }
 
     // Export newsletters

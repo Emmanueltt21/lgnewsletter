@@ -166,7 +166,15 @@ function sendConfirmationEmail($email, $first_name, $confirmation_token) {
         $CI->email->subject($subject);
         $CI->email->message($message);
         
-        return $CI->email->send();
+        $sent = $CI->email->send();
+
+        if (!$sent) {
+            // Capture detailed email debug info for troubleshooting
+            $debug = $CI->email->print_debugger(array('headers'));
+            file_put_contents('debug.log', "[" . date('Y-m-d H:i:s') . "] Confirmation email failed: " . $debug . "\n", FILE_APPEND);
+        }
+
+        return $sent;
         
     } catch (Exception $e) {
         error_log("Email sending error: " . $e->getMessage());
@@ -205,7 +213,15 @@ function sendWelcomeEmail($email, $first_name) {
         $CI->email->subject($subject);
         $CI->email->message($message);
         
-        return $CI->email->send();
+        $sent = $CI->email->send();
+
+        if (!$sent) {
+            // Capture detailed email debug info for troubleshooting
+            $debug = $CI->email->print_debugger(array('headers'));
+            file_put_contents('debug.log', "[" . date('Y-m-d H:i:s') . "] Welcome email failed: " . $debug . "\n", FILE_APPEND);
+        }
+
+        return $sent;
         
     } catch (Exception $e) {
         error_log("Welcome email error: " . $e->getMessage());

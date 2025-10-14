@@ -41,7 +41,7 @@
                             </div>
                         <?php endif; ?>
 
-                        <form method="post" action="<?php echo isset($newsletter) ? base_url('newsletter/update/' . $newsletter->id) : base_url('newsletter/create'); ?>">
+                        <form method="post" action="<?php echo base_url('newsletter/compose' . (isset($newsletter) ? '/' . $newsletter->id : '')); ?>">
                             <div class="row clearfix">
                                 <div class="col-sm-8">
                                     <div class="form-group form-float">
