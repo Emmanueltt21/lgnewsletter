@@ -368,9 +368,9 @@
         <div class="subscription-card">
             <div class="header">
                 <div class="lighthouse-icon">
-                    <i class="fas fa-lighthouse"></i>
+                    <img src="<?php echo base_url(); ?>assets/images/newsletter_logo_90.png" alt="Lighthouse Icon" class="icon-image">
                 </div>
-                <h1>Become a Lighthouse Pillar Partner in Kingdom Missions</h1>
+                <h1>Become a Lighthouse Pillar</h1>
                 <p class="subtitle">Lighthouse Global Missions</p>
             </div>
 
@@ -397,7 +397,7 @@
                         </div>
 
                         <div class="benefits-section">
-                            <h3>What You'll Receive as a Lighthouse Pillar</h3>
+                            <h3>Why become a Lighthouse Pillar</h3>
                             <div class="benefits-grid">
                                 <div class="benefit-item">
                                     <i class="fas fa-newspaper"></i>
@@ -405,19 +405,19 @@
                                     <p>Stay informed about our global missions</p>
                                 </div>
                                 <div class="benefit-item">
-                                    <i class="fas fa-praying-hands"></i>
+                                   <i class="fas fa-eye"></i>
                                     <h4>Prophetic Words</h4>
                                     <p>Receive timely prophetic messages</p>
                                 </div>
                                 <div class="benefit-item">
-                                    <i class="fas fa-heart"></i>
-                                    <h4>Kingdom Missions</h4>
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <h4>Partner in Kingdom Missions</h4>
                                     <p>Give with purpose towards God's work</p>
                                 </div>
                                 <div class="benefit-item">
                                     <i class="fas fa-users"></i>
                                     <h4>Exclusive Events</h4>
-                                    <p>Join special partner events in Germany</p>
+                                    <p>Join special partners’ events in Germany</p>
                                 </div>
                             </div>
                         </div>
@@ -465,7 +465,7 @@
             </div>
 
             <div class="footer">
-                <p>&copy; 2024 Lighthouse Global Missions. All rights reserved.</p>
+                <p>&copy; 2025 Lighthouse Global Missions. All rights reserved.</p>
             </div>
         </div>
     </div>
