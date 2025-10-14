@@ -90,7 +90,7 @@ function getWelcomeEmailTemplate($first_name, $signature) {
     <body>
         <div class='container'>
             <div class='header'>
-                <h1>🏮 Welcome to Lighthouse Global Missions!</h1>
+                <h1> Welcome to Lighthouse Global Missions!</h1>
                 <p>You're now part of our Lighthouse Pillars community</p>
             </div>
             <div class='content'>
@@ -284,10 +284,10 @@ function showSuccessPage($first_name) {
                 <div class="benefits">
                     <h3>What to expect:</h3>
                     <ul>
-                        <li><i class="fas fa-envelope"></i> Ministry updates and news</li>
-                        <li><i class="fas fa-pray"></i> Prophetic words and spiritual insights</li>
-                        <li><i class="fas fa-calendar"></i> Invitations to events and programs</li>
-                        <li><i class="fas fa-heart"></i> Special announcements and opportunities</li>
+                        <li><i class="fas fa-envelope"></i> Ministry updates</li>
+                        <li><i class="fas fa-pray"></i> Prophetic Messages</li>
+                        <li><i class="fas fa-calendar"></i> Invitations to events</li>
+                        <li><i class="fas fa-heart"></i> Opportunities to get involved</li>
                     </ul>
                 </div>
 

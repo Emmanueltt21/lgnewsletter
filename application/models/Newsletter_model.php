@@ -374,7 +374,22 @@ class Newsletter_model extends CI_Model {
             
             // Email content
             $confirmation_url = base_url() . "confirm_subscription.php?token=" . $confirmation_token;
-            $message = $this->get_confirmation_email_template($subscriber->first_name, $confirmation_url, $settings['email_signature']);
+
+            // Inline-embed logo for reliable rendering in email clients
+            $logo_cid = null;
+            $logo_path = FCPATH . 'assets/images/newsletter_logo_90.png';
+            if (is_file($logo_path)) {
+                $this->email->attach($logo_path, 'inline');
+                $logo_cid = $this->email->attachment_cid($logo_path);
+            }
+
+            $message = $this->get_confirmation_email_template(
+                $subscriber->first_name,
+                $confirmation_url,
+                $settings['email_signature'],
+                $logo_cid,
+                isset($settings['site_url']) ? $settings['site_url'] : null
+            );
             
             $this->email->from($settings['sender_email'], $settings['sender_name']);
             $this->email->to($subscriber->email);
@@ -568,7 +583,10 @@ class Newsletter_model extends CI_Model {
         </html>";
     }
 
-    private function get_confirmation_email_template($first_name, $confirmation_url, $signature) {
+    private function get_confirmation_email_template($first_name, $confirmation_url, $signature, $logo_cid = null, $site_url = null) {
+        $base = $site_url ? rtrim($site_url, '/') . '/' : base_url();
+        $logo_src = $logo_cid ? ('cid:' . $logo_cid) : ($base . "assets/images/newsletter_logo_90.png");
+
         return "
         <!DOCTYPE html>
         <html>
@@ -588,7 +606,7 @@ class Newsletter_model extends CI_Model {
         <body>
             <div class='container'>
                 <div class='header'>
-                    <img src='" . base_url() . "assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
+                    <img src='" . $logo_src . "' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
                     <h1> Lighthouse Global Missions</h1>
                     <p>Confirm Your Subscription</p>
                 </div>

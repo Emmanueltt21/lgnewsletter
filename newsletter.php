@@ -524,7 +524,8 @@
             formData.append('last_name', lastName);
             formData.append('email', email);
             
-            fetch('process_subscription_simple.php', {
+            // Post to CodeIgniter API controller to ensure pure JSON responses
+            fetch('/newsletter_api/subscribe', {
                 method: 'POST',
                 body: formData
             })

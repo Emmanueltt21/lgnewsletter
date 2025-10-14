@@ -324,26 +324,20 @@ function deleteSubscriber(id) {
 }
 
 function resendConfirmation(id) {
-    fetch('<?php echo base_url("newsletter/resend_confirmation"); ?>', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({id: id})
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Confirmation email sent successfully!');
-        } else {
-            alert('Error sending confirmation: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while sending confirmation email.');
-    });
+    // Submit via standard form POST to align with controller behavior
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '<?php echo base_url("subscribers/resend_confirmation"); ?>';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'subscriber_ids[]';
+    input.value = id;
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
 }
 
 function bulkDelete(ids) {
@@ -370,26 +364,22 @@ function bulkDelete(ids) {
 }
 
 function bulkResend(ids) {
-    fetch('<?php echo base_url("newsletter/bulk_resend_confirmation"); ?>', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({ids: ids})
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert(`Confirmation emails sent to ${data.count} subscribers!`);
-        } else {
-            alert('Error sending confirmations: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while sending confirmation emails.');
+    // Submit selected IDs via form POST to the bulk handler
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '<?php echo base_url("subscribers/resend_confirmation"); ?>';
+
+    ids.forEach(function(id) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'subscriber_ids[]';
+        input.value = id;
+        form.appendChild(input);
     });
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
 }
 
 function exportSelected(ids) {

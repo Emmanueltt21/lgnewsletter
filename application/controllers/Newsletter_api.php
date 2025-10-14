@@ -231,23 +231,54 @@ class Newsletter_api extends CI_Controller {
     private function _send_confirmation_email($email, $first_name, $last_name, $token, $subscriber_id) {
         // Get email settings
         $settings = $this->_get_email_settings();
-        
-        $subject = 'Confirm Your Newsletter Subscription - Lighthouse Global Missions';
+
+        // Subject and confirmation URL
+        $subject = isset($settings['confirmation_subject'])
+            ? $settings['confirmation_subject']
+            : 'Confirm Your Newsletter Subscription - Lighthouse Global Missions';
         $confirmation_url = base_url() . "confirm_subscription.php?token=" . $token;
-        
-        // Create HTML email content
-        $message = $this->_get_email_template($first_name, $last_name, $confirmation_url);
-        
-        // Email headers
-        $headers = array(
-            'From: ' . $settings['from_name'] . ' <' . $settings['from_email'] . '>',
-            'Reply-To: ' . $settings['from_email'],
-            'MIME-Version: 1.0',
-            'Content-Type: text/html; charset=UTF-8'
+
+        // Use CI Email library for sending and inline CID image support
+        $this->load->library('email');
+        $config = [
+            'protocol' => 'smtp',
+            'smtp_host' => isset($settings['smtp_host']) ? $settings['smtp_host'] : 'localhost',
+            'smtp_port' => isset($settings['smtp_port']) ? $settings['smtp_port'] : 587,
+            'smtp_user' => isset($settings['smtp_username']) ? $settings['smtp_username'] : '',
+            'smtp_pass' => isset($settings['smtp_password']) ? $settings['smtp_password'] : '',
+            'smtp_crypto' => isset($settings['smtp_encryption']) ? $settings['smtp_encryption'] : 'tls',
+            'mailtype' => 'html',
+            'charset' => 'utf-8',
+            'newline' => "\r\n"
+        ];
+        $this->email->initialize($config);
+
+        // Inline-embed logo image
+        $logo_cid = null;
+        $logo_path = FCPATH . 'assets/images/newsletter_logo_90.png';
+        if (is_file($logo_path)) {
+            $this->email->attach($logo_path, 'inline');
+            $logo_cid = $this->email->attachment_cid($logo_path);
+        }
+
+        // Build message with CID logo or site URL fallback
+        $message = $this->_get_email_template(
+            $first_name,
+            $last_name,
+            $confirmation_url,
+            $logo_cid,
+            isset($settings['site_url']) ? $settings['site_url'] : null
         );
-        
+
         // Send email
-        $sent = mail($email, $subject, $message, implode("\r\n", $headers));
+        $this->email->from(
+            isset($settings['sender_email']) ? $settings['sender_email'] : (isset($settings['from_email']) ? $settings['from_email'] : 'noreply@lighthouseglobal.org'),
+            isset($settings['sender_name']) ? $settings['sender_name'] : (isset($settings['from_name']) ? $settings['from_name'] : 'Lighthouse Global Missions')
+        );
+        $this->email->to($email);
+        $this->email->subject($subject);
+        $this->email->message($message);
+        $sent = $this->email->send();
         
         // Log email history
         $this->_log_email_history($email, $first_name . ' ' . $last_name, $subject, 'confirmation', null, $subscriber_id, $sent);
@@ -257,22 +288,30 @@ class Newsletter_api extends CI_Controller {
 
     private function _get_email_settings() {
         try {
-            $settings = $this->db->get('newsletter_settings')->row();
-            
-            return array(
-                'from_name' => ($settings && isset($settings->from_name)) ? $settings->from_name : 'Lighthouse Global Missions',
-                'from_email' => ($settings && isset($settings->from_email)) ? $settings->from_email : 'noreply@lighthouseglobal.org'
-            );
+            $rows = $this->db->get('newsletter_settings')->result();
+            $settings = [];
+            foreach ($rows as $row) {
+                if (isset($row->setting_key)) {
+                    $settings[$row->setting_key] = $row->setting_value;
+                }
+            }
+            // Backward-compatible keys
+            $settings['from_name'] = isset($settings['sender_name']) ? $settings['sender_name'] : 'Lighthouse Global Missions';
+            $settings['from_email'] = isset($settings['sender_email']) ? $settings['sender_email'] : 'noreply@lighthouseglobal.org';
+            return $settings;
         } catch (Exception $e) {
             return array(
+                'sender_name' => 'Lighthouse Global Missions',
+                'sender_email' => 'noreply@lighthouseglobal.org',
                 'from_name' => 'Lighthouse Global Missions',
                 'from_email' => 'noreply@lighthouseglobal.org'
             );
         }
     }
 
-    private function _get_email_template($first_name, $last_name, $confirmation_url) {
-        $logoUrl = base_url() . 'assets/images/newsletter_logo_90.png';
+    private function _get_email_template($first_name, $last_name, $confirmation_url, $logoCid = null, $siteUrl = null) {
+        $base = $siteUrl ? rtrim($siteUrl, '/') . '/' : base_url();
+        $logoUrl = $logoCid ? ('cid:' . $logoCid) : ($base . 'assets/images/newsletter_logo_90.png');
         $year = date('Y');
         $first_name_esc = htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8');
         $last_name_esc = htmlspecialchars($last_name, ENT_QUOTES, 'UTF-8');
@@ -284,15 +323,15 @@ class Newsletter_api extends CI_Controller {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm Your Subscription</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
-        .content { padding: 30px; background: #f9f9f9; }
-        .button { display: inline-block; padding: 12px 30px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-        .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
-    </style>
-<head>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+            .content { padding: 30px; background: #f9f9f9; }
+            .button { display: inline-block; padding: 12px 30px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+        </style>
+</head>
 <body>
     <div class="container">
         <div class="header">

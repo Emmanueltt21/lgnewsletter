@@ -155,11 +155,28 @@ function sendConfirmationEmail($email, $first_name, $confirmation_token) {
         
         $CI->email->initialize($config);
         
-        // Email content
-        $confirmation_url = base_url() . "confirm_subscription.php?token=" . $confirmation_token;
+        // Email content (build absolute URL using configured site_url if available)
+        $base = (!empty($settings['site_url']))
+            ? rtrim($settings['site_url'], '/') . '/'
+            : rtrim(base_url(), '/') . '/';
+        $confirmation_url = $base . "confirm_subscription.php?token=" . $confirmation_token;
+
+        // Inline-embed logo image
+        $logoCid = null;
+        $logoPath = FCPATH . 'assets/images/newsletter_logo_90.png';
+        if (is_file($logoPath)) {
+            $CI->email->attach($logoPath, 'inline');
+            $logoCid = $CI->email->attachment_cid($logoPath);
+        }
         
         $subject = $settings['confirmation_subject'];
-        $message = getConfirmationEmailTemplate($first_name, $confirmation_url, $settings['email_signature']);
+        $message = getConfirmationEmailTemplate(
+            $first_name,
+            $confirmation_url,
+            $settings['email_signature'],
+            $logoCid,
+            isset($settings['site_url']) ? $settings['site_url'] : null
+        );
         
         $CI->email->from($settings['sender_email'], $settings['sender_name']);
         $CI->email->to($email);
@@ -231,16 +248,38 @@ function sendWelcomeEmail($email, $first_name) {
 
 function getEmailSettings() {
     global $CI;
-    
-    $settings_query = $CI->db->get('newsletter_settings');
-    $settings_raw = $settings_query->result_array();
-    
+    // Attempt to load settings from DB; fall back to sane defaults if table is missing
     $settings = [];
-    foreach ($settings_raw as $setting) {
-        $settings[$setting['setting_key']] = $setting['setting_value'];
+    try {
+        $settings_query = $CI->db->get('newsletter_settings');
+        $settings_raw = $settings_query->result_array();
+        foreach ($settings_raw as $setting) {
+            if (isset($setting['setting_key'])) {
+                $settings[$setting['setting_key']] = $setting['setting_value'] ?? '';
+            }
+        }
+    } catch (Throwable $e) {
+        // Log but continue with defaults
+        file_put_contents('debug.log', "[" . date('Y-m-d H:i:s') . "] getEmailSettings error: " . $e->getMessage() . "\n", FILE_APPEND);
     }
-    
-    return $settings;
+
+    // Defaults to ensure email can initialize; adjust in Admin -> Newsletter settings
+    $defaults = [
+        'sender_name' => 'Lighthouse Global Missions',
+        'sender_email' => 'noreply@localhost',
+        'smtp_host' => 'localhost',
+        'smtp_port' => '587',
+        'smtp_username' => '',
+        'smtp_password' => '',
+        'smtp_encryption' => 'tls',
+        'email_signature' => "Blessings,\nLighthouse Global Missions",
+        'confirmation_subject' => 'Confirm your subscription to Lighthouse Global Missions Newsletter',
+        'welcome_subject' => 'Welcome to Lighthouse Global Missions!',
+        'site_url' => rtrim(base_url(), '/')
+    ];
+
+    // DB values override defaults
+    return array_merge($defaults, $settings);
 }
 
 function logEmailHistory($subscriber_id, $recipient_email, $recipient_name, $subject, $email_type, $newsletter_id = null) {
@@ -261,7 +300,10 @@ function logEmailHistory($subscriber_id, $recipient_email, $recipient_name, $sub
     $CI->db->insert('email_history', $history_data);
 }
 
-function getConfirmationEmailTemplate($first_name, $confirmation_url, $signature) {
+function getConfirmationEmailTemplate($first_name, $confirmation_url, $signature, $logoCid = null, $siteUrl = null) {
+    $base = $siteUrl ? rtrim($siteUrl, '/') . '/' : base_url();
+    $logoSrc = $logoCid ? ('cid:' . $logoCid) : ($base . "assets/images/newsletter_logo_90.png");
+
     return "
     <!DOCTYPE html>
     <html>
@@ -281,8 +323,8 @@ function getConfirmationEmailTemplate($first_name, $confirmation_url, $signature
     <body>
         <div class='container'>
             <div class='header'>
-                <img src='" . base_url() . "assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
-                <h1>🏮 Lighthouse Global Missions</h1>
+                <img src='" . $logoSrc . "' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
+                <h1> Lighthouse Global Missions</h1>
                 <p>Confirm Your Subscription</p>
             </div>
             <div class='content'>
@@ -328,7 +370,7 @@ function getWelcomeEmailTemplate($first_name, $signature) {
         <div class='container'>
             <div class='header'>
                 <img src='" . base_url() . "assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
-                <h1>🏮 Welcome to Lighthouse Global Missions!</h1>
+                <h1> Welcome to Lighthouse Global Missions!</h1>
                 <p>You're now part of our Lighthouse Pillars community</p>
             </div>
             <div class='content'>
