@@ -272,44 +272,52 @@ class Newsletter_api extends CI_Controller {
     }
 
     private function _get_email_template($first_name, $last_name, $confirmation_url) {
-        return '
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Confirm Your Subscription</title>
-            <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
-                .content { padding: 30px; background: #f9f9f9; }
-                .button { display: inline-block; padding: 12px 30px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-                .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h1>Lighthouse Global Missions</h1>
-                    <p>Newsletter Subscription Confirmation</p>
-                </div>
-                <div class="content">
-                    <h2>Hello ' . htmlspecialchars($first_name) . ' ' . htmlspecialchars($last_name) . ',</h2>
-                    <p>Thank you for subscribing to our newsletter! To complete your subscription, please click the button below to confirm your email address:</p>
-                    <p style="text-align: center;">
-                        <a href="' . $confirmation_url . '" class="button">Confirm Subscription</a>
-                    </p>
-                    <p>If the button doesn\'t work, you can copy and paste this link into your browser:</p>
-                    <p><a href="' . $confirmation_url . '">' . $confirmation_url . '</a></p>
-                    <p>If you didn\'t subscribe to our newsletter, you can safely ignore this email.</p>
-                </div>
-                <div class="footer">
-                    <p>&copy; ' . date('Y') . ' Lighthouse Global Missions. All rights reserved.</p>
-                </div>
-            </div>
-        </body>
-        </html>';
+        $logoUrl = base_url() . 'assets/images/newsletter_logo_90.png';
+        $year = date('Y');
+        $first_name_esc = htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8');
+        $last_name_esc = htmlspecialchars($last_name, ENT_QUOTES, 'UTF-8');
+
+        $html = <<<HTML
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Subscription</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+        .content { padding: 30px; background: #f9f9f9; }
+        .button { display: inline-block; padding: 12px 30px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+    </style>
+<head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="$logoUrl" alt="Lighthouse Global Missions" style="max-height: 90px; width: auto; display: block; margin: 0 auto 10px;">
+            <h1>Lighthouse Global Missions</h1>
+            <p>Newsletter Subscription Confirmation</p>
+        </div>
+        <div class="content">
+            <h2>Hello $first_name_esc $last_name_esc,</h2>
+            <p>Thank you for subscribing to our newsletter! To complete your subscription, please click the button below to confirm your email address:</p>
+            <p style="text-align: center;">
+                <a href="$confirmation_url" class="button">Confirm Subscription</a>
+            </p>
+            <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
+            <p><a href="$confirmation_url">$confirmation_url</a></p>
+            <p>If you didn't subscribe to our newsletter, you can safely ignore this email.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; $year Lighthouse Global Missions. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+HTML;
+        return $html;
     }
 
     private function _log_email_history($recipient_email, $recipient_name, $subject, $email_type, $newsletter_id, $subscriber_id, $sent) {

@@ -10,8 +10,13 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Admin Dashboard</title>
-    <!-- Favicon-->
-    <link rel="icon" href="<?php echo asset_url('images/favicon.ico'); ?>" type="image/x-icon">
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="<?php echo asset_url('images/favicon/favicon-96x96.png'); ?>" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="<?php echo asset_url('images/favicon/favicon.svg'); ?>">
+    <link rel="shortcut icon" href="<?php echo asset_url('images/favicon/favicon.ico'); ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo asset_url('images/favicon/apple-touch-icon.png'); ?>">
+    <meta name="apple-mobile-web-app-title" content="Lgmissions">
+    <link rel="manifest" href="<?php echo asset_url('images/favicon/site.webmanifest'); ?>">
 
     <!--REQUIRED PLUGIN CSS-->
 

@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Become a Lighthouse Pillar - Lighthouse Global Missions</title>
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="/assets/images/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon/favicon.svg">
+    <link rel="shortcut icon" href="/assets/images/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-title" content="Lgmissions">
+    <link rel="manifest" href="/assets/images/favicon/site.webmanifest">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>

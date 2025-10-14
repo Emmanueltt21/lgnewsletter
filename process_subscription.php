@@ -281,6 +281,7 @@ function getConfirmationEmailTemplate($first_name, $confirmation_url, $signature
     <body>
         <div class='container'>
             <div class='header'>
+                <img src='" . base_url() . "assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
                 <h1>🏮 Lighthouse Global Missions</h1>
                 <p>Confirm Your Subscription</p>
             </div>
@@ -326,6 +327,7 @@ function getWelcomeEmailTemplate($first_name, $signature) {
     <body>
         <div class='container'>
             <div class='header'>
+                <img src='" . base_url() . "assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
                 <h1>🏮 Welcome to Lighthouse Global Missions!</h1>
                 <p>You're now part of our Lighthouse Pillars community</p>
             </div>

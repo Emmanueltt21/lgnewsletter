@@ -5,8 +5,13 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>Lighthouse Newsletter | Admin Login</title>
-    <!-- Favicon-->
-    <link rel="icon" href="<?php echo asset_url('images/favicon.ico'); ?>" type="image/x-icon">
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="<?php echo asset_url('images/favicon/favicon-96x96.png'); ?>" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="<?php echo asset_url('images/favicon/favicon.svg'); ?>">
+    <link rel="shortcut icon" href="<?php echo asset_url('images/favicon/favicon.ico'); ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo asset_url('images/favicon/apple-touch-icon.png'); ?>">
+    <meta name="apple-mobile-web-app-title" content="Lgmissions">
+    <link rel="manifest" href="<?php echo asset_url('images/favicon/site.webmanifest'); ?>">
     <!-- Bootstrap Core Css -->
     <link href="<?php echo asset_url('plugins/bootstrap/css/bootstrap.css'); ?>" rel="stylesheet">
 
@@ -90,15 +95,13 @@
         }
         
         .lighthouse-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
+            width: 90px;
+            height: 90px;
+            margin: 10px auto 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+    
         }
         
         .lighthouse-title {
@@ -296,7 +299,8 @@
     <div class="lighthouse-container">
         <div class="lighthouse-header">
             <div class="lighthouse-icon">
-                <i class="material-icons">lightbulb_outline</i>
+                <!-- <i class="material-icons">lightbulb_outline</i> -->
+                  <img src="<?php echo base_url(); ?>assets/images/newsletter_logo_90.png" alt="Lighthouse Icon" class="icon-image">
             </div>
             <h1 class="lighthouse-title">Lighthouse Newsletter</h1>
             <p class="lighthouse-subtitle">Guiding Light for Your Community</p>
