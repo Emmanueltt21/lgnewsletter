@@ -425,7 +425,7 @@
                 </div>
 
                 <div class="form-container">
-                    <h3 class="form-title">Sign up for Lighthouse Global Missions' Newsletter</h3>
+                    <h3 class="form-title">Sign up for Lighthouse Global Missions' newsletter</h3>
                     
                     <div class="success-message" id="successMessage">
                         <i class="fas fa-check-circle"></i> Thank you for becoming a Lighthouse Pillar! Please check your email to confirm your subscription.
