@@ -35,6 +35,8 @@ application/config/database.php
 application/config/config.php
 application/config/email.php
 application/config/u889622533_yourddlight (1).sql
+newsletter_wrapper.php
+unsubscribe.php
 
 # Keep example config files
 !application/config/database.example.php
