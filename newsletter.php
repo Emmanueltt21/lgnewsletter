@@ -368,7 +368,7 @@
         <div class="subscription-card">
             <div class="header">
                 <div class="lighthouse-icon">
-                    <img src="<?php echo base_url(); ?>assets/images/newsletter_logo_90.png" alt="Lighthouse Icon" class="icon-image">
+                    <img src="<?php echo base_url(); ?>assets/images/lgnewsletter_logo_256.png" alt="Lighthouse Icon" class="icon-image">
                 </div>
                 <h1>Become a Lighthouse Pillar</h1>
                 <p class="subtitle">Lighthouse Global Missions</p>
