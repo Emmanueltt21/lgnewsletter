@@ -57,8 +57,8 @@ function sendWelcomeEmail($email, $first_name, $newsletterWrapper) {
         $headers = [
             'MIME-Version: 1.0',
             'Content-type: text/html; charset=UTF-8',
-            'From: ' . ($settings['sender_name'] ?? 'Lighthouse Global Missions') . ' <' . ($settings['sender_email'] ?? 'info@lgmissions.org') . '>',
-            'Reply-To: ' . ($settings['sender_email'] ?? 'info@lgmissions.org'),
+            'From: ' . ($settings['sender_name'] ?? 'Lighthouse Global Missions') . ' <' . ($settings['sender_email'] ?? 'pastorsimon@lgmissions.org') . '>',
+            'Reply-To: ' . ($settings['sender_email'] ?? 'pastorsimon@lgmissions.org'),
             'X-Mailer: PHP/' . phpversion()
         ];
         
