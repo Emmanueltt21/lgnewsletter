@@ -331,34 +331,106 @@
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
+                min-height: auto;
+                display: block;
+                align-items: stretch;
+                justify-content: flex-start;
             }
 
             .header {
-                padding: 3rem 2rem;
+                padding: 2rem 1.5rem;
+            }
+
+            .lighthouse-icon img {
+                width: 72px;
+                height: 72px;
+                object-fit: contain;
             }
 
             .header h1 {
-                font-size: 2.2rem;
+                font-size: 1.9rem;
+                line-height: 1.2;
             }
 
             .content {
-                padding: 3rem 2rem;
+                padding: 2rem 1.25rem;
             }
 
             .intro h2 {
-                font-size: 2rem;
+                font-size: 1.6rem;
             }
 
             .pillar-section {
-                padding: 2rem;
+                padding: 1.25rem;
+            }
+
+            .pillar-section p {
+                font-size: 1rem;
+                overflow-wrap: anywhere;
             }
 
             .form-container {
-                padding: 2rem;
+                padding: 1.5rem;
             }
 
             .benefits-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .submit-btn {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.75rem;
+            }
+
+            .lighthouse-icon img {
+                width: 64px;
+                height: 64px;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .content {
+                padding: 1.5rem 1rem;
+            }
+
+            .intro h2 {
+                font-size: 1.4rem;
+            }
+
+            .benefits-section h3 {
+                font-size: 1.5rem;
+            }
+
+            .scripture-quote {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+
+            .form-title {
+                font-size: 1.6rem;
+            }
+
+            .form-group label {
+                font-size: 0.95rem;
+            }
+
+            .form-group input {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+
+            .success-message,
+            .error-alert {
+                font-size: 0.9rem;
             }
         }
     </style>
