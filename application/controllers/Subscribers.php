@@ -89,4 +89,29 @@ class Subscribers extends BaseController {
         
         fclose($output);
     }
+
+    public function add(){
+        $first_name = trim($this->input->post('first_name'));
+        $last_name = trim($this->input->post('last_name'));
+        $email = trim($this->input->post('email'));
+
+        if (empty($first_name) || empty($last_name) || empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->session->set_flashdata('error', 'Please provide a valid first name, last name, and email.');
+            redirect('subscribers');
+            return;
+        }
+
+        $ip_address = $this->input->ip_address();
+        $user_agent = $this->input->user_agent();
+
+        $result = $this->Newsletter_model->add_subscriber_confirmed($first_name, $last_name, $email, $ip_address, $user_agent);
+
+        if ($result) {
+            $this->session->set_flashdata('success', 'Subscriber added and verified successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to add subscriber. The email may already be verified.');
+        }
+
+        redirect('subscribers');
+    }
 }

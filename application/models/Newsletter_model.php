@@ -134,6 +134,47 @@ class Newsletter_model extends CI_Model {
         return $this->db->get_where('newsletter_subscribers', ['status' => 'confirmed'])->result();
     }
 
+    // Find subscriber by email
+    public function get_subscriber_by_email($email) {
+        return $this->db->get_where('newsletter_subscribers', ['email' => $email])->row();
+    }
+
+    // Add new subscriber as confirmed, or confirm existing one
+    public function add_subscriber_confirmed($first_name, $last_name, $email, $ip_address = null, $user_agent = null) {
+        $existing = $this->get_subscriber_by_email($email);
+        $now = date('Y-m-d H:i:s');
+
+        if ($existing) {
+            $data = [
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'status' => 'confirmed',
+                'confirmed_at' => $now,
+                'unsubscribed_at' => null
+            ];
+            if ($ip_address) { $data['ip_address'] = $ip_address; }
+            if ($user_agent) { $data['user_agent'] = $user_agent; }
+
+            $this->db->where('id', $existing->id);
+            return $this->db->update('newsletter_subscribers', $data);
+        } else {
+            $insert = [
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'email' => $email,
+                'status' => 'confirmed',
+                'confirmation_token' => null,
+                'subscribed_at' => $now,
+                'confirmed_at' => $now,
+                'unsubscribed_at' => null,
+                'ip_address' => $ip_address,
+                'user_agent' => $user_agent
+            ];
+            $this->db->insert('newsletter_subscribers', $insert);
+            return $this->db->insert_id();
+        }
+    }
+
     public function get_recent_subscribers($limit = 5) {
         $this->db->select('first_name, last_name, email, status, subscribed_at');
         $this->db->from('newsletter_subscribers');

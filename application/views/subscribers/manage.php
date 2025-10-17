@@ -58,6 +58,18 @@
                 <div class="card">
                     <div class="header">
                         <h2>FILTER & SEARCH</h2>
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">more_vert</i>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a href="javascript:void(0);" onclick="exportSubscribers()">Export All Subscribers</a></li>
+                                    <li><a href="javascript:void(0);" onclick="selectAll()">Select All</a></li>
+                                    <li><a href="javascript:void(0);" onclick="deselectAll()">Deselect All</a></li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                     <div class="body">
                         <form method="GET" action="<?php echo base_url('dashboard/subscribers'); ?>">
@@ -104,7 +116,7 @@
         </div>
 
         <!-- Bulk Actions -->
-        <div class="row clearfix">
+        <!-- <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header">
@@ -141,7 +153,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Subscribers Table -->
         <div class="row clearfix">
@@ -149,6 +161,11 @@
                 <div class="card">
                     <div class="header">
                         <h2>SUBSCRIBERS LIST</h2>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-success waves-effect" data-toggle="modal" data-target="#addSubscriberModal">
+                                <i class="material-icons">person_add</i> ADD SUBSCRIBER
+                            </button>
+                        </div>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -232,6 +249,43 @@
                 <?php echo $this->session->flashdata('error'); ?>
             </div>
         <?php endif; ?>
+    </div>
+
+    <!-- Add Subscriber Modal -->
+    <div class="modal fade" id="addSubscriberModal" tabindex="-1" role="dialog" aria-labelledby="addSubscriberModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addSubscriberModalLabel">Add Subscriber</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="addSubscriberForm" method="POST" action="<?php echo base_url('subscribers/add'); ?>">
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <div class="form-line">
+                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <div class="form-line">
+                                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <div class="form-line">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">CANCEL</button>
+                    <button type="submit" form="addSubscriberForm" class="btn btn-success waves-effect">ADD</button>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
