@@ -355,7 +355,7 @@
         </div>
         
         <div class="lighthouse-footer">
-            <p>&copy; 2024 Lighthouse Newsletter. Spreading God's light in our community.</p>
+            <p>&copy; 2025 Lighthouse Newsletter. Spreading God's light in our community.</p>
         </div>
     </div>
 

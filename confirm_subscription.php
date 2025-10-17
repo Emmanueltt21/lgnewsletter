@@ -104,7 +104,7 @@ function getWelcomeEmailTemplate($first_name, $signature) {
                 <p>As a subscriber, you will receive:</p>
                 <ul>
                     <li>📧 Ministry updates </li>
-                    <li>🙏 Prophetic Messages</li>
+                    <li>🔭 Prophetic Messages</li>
                     <li>📅 Invitations to our events</li>
                     <li>💝 Opportunities to get involved</li>
                 </ul>
@@ -299,8 +299,7 @@ function showSuccessPage($first_name) {
             </div>
 
             <div class="footer">
-                <p>&copy; 2024 Lighthouse Global Missions. All rights reserved.</p>
-                <p>Blessings, Pastor Simon Mungwa</p>
+                <p>&copy; 2025 Lighthouse Global Missions. All rights reserved.</p>
             </div>
         </div>
     </body>
@@ -421,7 +420,7 @@ function showErrorPage($message) {
             </div>
 
             <div class="footer">
-                <p>&copy; 2024 Lighthouse Global Missions. All rights reserved.</p>
+                <p>&copy; 2025 Lighthouse Global Missions. All rights reserved.</p>
             </div>
         </div>
     </body>
