@@ -386,7 +386,7 @@ function getWelcomeEmailTemplate($first_name, $signature) {
                     <li>📧 Ministry updates </li>
                     <li>🔭 Prophetic Messages</li>
                     <li>📅 Invitations to our events </li>
-                    <li>💝 Opportunities to get involved</li>
+                    <li>💝 Opportunities to get involved in Kingdom impact</li>
                 </ul>
                 
                 <p>Stay tuned for updates, prophetic Messages, and invitations to our events. We're excited to have you join us in God's work around the world!</p>
