@@ -103,10 +103,10 @@ function getWelcomeEmailTemplate($first_name, $signature) {
                 
                 <p>As a subscriber, you will receive:</p>
                 <ul>
-                    <li>📧 Ministry updates and news</li>
-                    <li>🙏 Prophetic words and spiritual insights</li>
-                    <li>📅 Invitations to our events and programs</li>
-                    <li>💝 Special announcements and opportunities to get involved</li>
+                    <li>📧 Ministry updates </li>
+                    <li>🙏 Prophetic Messages</li>
+                    <li>📅 Invitations to our events</li>
+                    <li>💝 Opportunities to get involved</li>
                 </ul>
                 
                 <p>Stay tuned for updates, prophetic words, and invitations to our events. We're excited to have you join us in God's work around the world!</p>

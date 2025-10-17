@@ -380,7 +380,7 @@
                     
                     <div class="pillar-content">
                         <div class="pillar-section">
-                            <p>This is your invitation to join us at Lighthouse Global Missions as a valued member of our community of persons who are committed to stand with us in the work of the Lord as we fulfill His call to reach our world with His word, bringing many people into an experience of His power, discovery of their purpose and fulfilment of their destinies in Christ.</p>
+                            <p>This is your invitation to join us at Lighthouse Global Missions, as a valued member of our community of people who are committed to standing with us in the work of the Lord, as we fulfill His call to reach our world with His Word; in order to bring many people into an experience of His power; helping them to discover their purpose and to fulfill their destinies in Christ.</p>
                         </div>
 
                         <div class="scripture-quote">
