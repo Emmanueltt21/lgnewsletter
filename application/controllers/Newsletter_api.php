@@ -335,7 +335,8 @@ class Newsletter_api extends CI_Controller {
 <body>
     <div class="container">
         <div class="header">
-            <img src="$logoUrl" alt="Lighthouse Global Missions" style="max-height: 90px; width: auto; display: block; margin: 0 auto 10px;">
+            <!-- <img src="$logoUrl" alt="Lighthouse Global Missions" style="max-height: 90px; width: auto; display: block; margin: 0 auto 10px;"> -->
+             
             <h1>Lighthouse Global Missions</h1>
             <p>Newsletter Subscription Confirmation</p>
         </div>

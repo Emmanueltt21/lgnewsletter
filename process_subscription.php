@@ -336,7 +336,7 @@ function getConfirmationEmailTemplate($first_name, $confirmation_url, $signature
                 </div>
                 
                 <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
-                <p style='word-break: break-all; color: #667eea;'>" . $confirmation_url . "</p>
+                <p style='word-break: break-all; color: #ffffffff;'>" . $confirmation_url . "</p>
                 
                 <p>If you didn't subscribe to our newsletter, you can safely ignore this email.</p>
                 
@@ -386,7 +386,7 @@ function getWelcomeEmailTemplate($first_name, $signature) {
                     <li>📧 Ministry updates </li>
                     <li>🔭 Prophetic Messages</li>
                     <li>📅 Invitations to our events </li>
-                    <li>💝 Opportunities to get involved in Kingdom impact</li>
+                    <li>💶 Information regarding opportunities to get involved in Kingdom impact</li>
                 </ul>
                 
                 <p>Stay tuned for updates, prophetic Messages, and invitations to our events. We're excited to have you join us in God's work around the world!</p>

@@ -661,7 +661,7 @@ class Newsletter_model extends CI_Model {
                     </div>
                     
                     <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
-                    <p style='word-break: break-all; color: #667eea;'>" . $confirmation_url . "</p>
+                    <p style='word-break: break-all; color: #ffffffff;'>" . $confirmation_url . "</p>
                     
                     <p>If you didn't subscribe to our newsletter, you can safely ignore this email.</p>
                     

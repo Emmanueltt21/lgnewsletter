@@ -106,7 +106,7 @@ function getWelcomeEmailTemplate($first_name, $signature) {
                     <li>📧 Ministry updates </li>
                     <li>🔭 Prophetic Messages</li>
                     <li>📅 Invitations to our events</li>
-                    <li>💝 Opportunities to get involved in Kingdom impact</li>
+                    <li>💶 Information regarding opportunities to get involved in Kingdom impact</li>
                 </ul>
                 
                 <p>Stay tuned for updates, prophetic words, and invitations to our events. We're excited to have you join us in God's work around the world!</p>
@@ -284,14 +284,17 @@ function showSuccessPage($first_name) {
                 <div class="benefits">
                     <h3>What to expect:</h3>
                     <ul>
-                        <li><i class="fas fa-envelope"></i> Ministry updates</li>
-                        <li><i class="fas fa-pray"></i> Prophetic Messages</li>
-                        <li><i class="fas fa-calendar"></i> Invitations to events</li>
-                        <li><i class="fas fa-heart"></i> Opportunities to get involved</li>
+                        <li>📧 Ministry updates</li>
+                        <li>🔭 Prophetic Messages</li>
+                        <li>📅 Invitations to events</li>
+                        <li> Information regarding opportunities to get involved in Kingdom impact</li>
                     </ul>
                 </div>
 
                 <p>A welcome email has been sent to your inbox with more details about our ministry and community.</p>
+
+                <p>God’s richest blessings</p>
+                <p>Pastor Simon Mungwa</p>
 
                 <a href="https://www.lgmissions.org" class="cta-button">
                     <i class="fas fa-home"></i> Visit Our Website
