@@ -287,7 +287,7 @@ function showSuccessPage($first_name) {
                         <li>📧 Ministry updates</li>
                         <li>🔭 Prophetic Messages</li>
                         <li>📅 Invitations to events</li>
-                        <li> Information regarding opportunities to get involved in Kingdom impact</li>
+                        <li>💶 Information regarding opportunities to get involved in Kingdom impact</li>
                     </ul>
                 </div>
 
