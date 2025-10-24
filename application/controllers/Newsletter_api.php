@@ -328,7 +328,7 @@ class Newsletter_api extends CI_Controller {
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
             .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
             .content { padding: 30px; background: #f9f9f9; }
-            .button { display: inline-block; padding: 12px 30px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .button { display: inline-block; padding: 12px 30px; background: #e0e1e1ff; color:  #ffffffff; text-decoration: none; border-radius: 5px; margin: 20px 0; }
             .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
         </style>
 </head>
