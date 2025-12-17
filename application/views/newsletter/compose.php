@@ -89,7 +89,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="content">Newsletter Content</label>
-                                        <textarea id="content" name="content" class="form-control" rows="15" required><?php echo isset($newsletter) ? htmlspecialchars($newsletter->content) : set_value('content'); ?></textarea>
+                                        <textarea id="content" name="content" class="form-control editor" rows="15"><?php echo isset($newsletter) ? htmlspecialchars($newsletter->content) : set_value('content'); ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -161,27 +161,7 @@
 </section>
 
 <script>
-$(document).ready(function() {
-    // Initialize CKEditor for content
-    if (typeof CKEDITOR !== 'undefined') {
-        CKEDITOR.replace('content', {
-            height: 300,
-            toolbar: [
-                { name: 'document', items: ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates'] },
-                { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'] },
-                { name: 'editing', items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt'] },
-                '/',
-                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'] },
-                { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl'] },
-                { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
-                { name: 'insert', items: ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe'] },
-                '/',
-                { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
-                { name: 'colors', items: ['TextColor', 'BGColor'] },
-                { name: 'tools', items: ['Maximize', 'ShowBlocks'] }
-            ]
-        });
-    }
+    // Recipient type handling functionality preserved below
 
     // Handle recipient type change
     $('input[name="recipient_type"]').change(function() {
