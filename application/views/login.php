@@ -16,25 +16,28 @@
     <link href="<?php echo asset_url('plugins/bootstrap/css/bootstrap.css'); ?>" rel="stylesheet">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
     <!-- Custom Css -->
     <link href="<?php echo asset_url('css/style.css'); ?>" rel="stylesheet">
-    
+
     <style>
         /* Global reset for better cross-browser compatibility */
         * {
             box-sizing: border-box;
         }
-        
-        html, body {
+
+        html,
+        body {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
         }
-        
+
         .lighthouse-login-page {
             background: url('uploads/thumbnails/newsletter_background_login.png') center center no-repeat;
             background-size: cover;
@@ -56,7 +59,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         .lighthouse-login-page::before {
             content: '';
             position: absolute;
@@ -64,11 +67,11 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #4e2f21;
+            background-color: #2D4558;
             opacity: 0.7;
             z-index: 0;
         }
-        
+
         .lighthouse-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -85,15 +88,15 @@
             margin: 20px;
             box-sizing: border-box;
         }
-        
+
         .lighthouse-header {
-            background: linear-gradient(135deg, #4e2f21 0%, #3d241a 100%);
+            background: linear-gradient(135deg, #2D4558 0%, #1E303E 100%);
             padding: 40px 30px;
             text-align: center;
             color: white;
             position: relative;
         }
-        
+
         .lighthouse-icon {
             width: 90px;
             height: 90px;
@@ -101,9 +104,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-    
+
         }
-        
+
         .lighthouse-title {
             font-family: 'Playfair Display', serif;
             font-size: 28px;
@@ -111,23 +114,23 @@
             margin: 0 0 8px 0;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
+
         .lighthouse-subtitle {
             font-size: 14px;
             opacity: 0.9;
             font-weight: 300;
             margin: 0;
         }
-        
+
         .lighthouse-form {
             padding: 40px 30px;
         }
-        
+
         .lighthouse-welcome {
             text-align: center;
             margin-bottom: 30px;
         }
-        
+
         .lighthouse-welcome h3 {
             color: #2c3e50;
             font-family: 'Playfair Display', serif;
@@ -135,18 +138,18 @@
             font-weight: 600;
             margin: 0 0 8px 0;
         }
-        
+
         .lighthouse-welcome p {
             color: #7f8c8d;
             font-size: 14px;
             margin: 0;
         }
-        
+
         .lighthouse-input-group {
             margin-bottom: 25px;
             position: relative;
         }
-        
+
         .lighthouse-input {
             width: 100%;
             padding: 15px 20px 15px 50px;
@@ -157,14 +160,14 @@
             background: #f8f9fa;
             font-family: 'Inter', sans-serif;
         }
-        
+
         .lighthouse-input:focus {
             outline: none;
-            border-color: #4e2f21;
+            border-color: #2D4558;
             background: white;
-            box-shadow: 0 0 0 3px rgba(78, 47, 33, 0.1);
+            box-shadow: 0 0 0 3px rgba(45, 69, 88, 0.1);
         }
-        
+
         .lighthouse-input-icon {
             position: absolute;
             left: 18px;
@@ -174,15 +177,15 @@
             font-size: 20px;
             transition: color 0.3s ease;
         }
-        
-        .lighthouse-input:focus + .lighthouse-input-icon {
-            color: #4e2f21;
+
+        .lighthouse-input:focus+.lighthouse-input-icon {
+            color: #2D4558;
         }
-        
+
         .lighthouse-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #4e2f21 0%, #3d241a 100%);
+            background: linear-gradient(135deg, #2D4558 0%, #1E303E 100%);
             border: none;
             border-radius: 12px;
             color: white;
@@ -194,52 +197,52 @@
             letter-spacing: 0.5px;
             margin-top: 10px;
         }
-        
+
         .lighthouse-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(78, 47, 33, 0.3);
+            box-shadow: 0 8px 25px rgba(45, 69, 88, 0.3);
         }
-        
+
         .lighthouse-btn:active {
             transform: translateY(0);
         }
-        
+
         .lighthouse-footer {
             text-align: center;
             padding: 20px 30px;
             background: #f8f9fa;
             border-top: 1px solid #e9ecef;
         }
-        
+
         .lighthouse-footer p {
             margin: 0;
             color: #6c757d;
             font-size: 12px;
         }
-        
+
         .alert {
             border-radius: 10px;
             margin-bottom: 20px;
             border: none;
             padding: 12px 15px;
         }
-        
+
         .alert-danger {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
             color: white;
         }
-        
+
         .alert-success {
             background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
             color: white;
         }
-        
+
         @media (max-width: 480px) {
             .lighthouse-login-page {
                 padding: 10px;
                 box-sizing: border-box;
             }
-            
+
             .lighthouse-container {
                 margin: 10px auto;
                 width: calc(100% - 20px);
@@ -254,20 +257,20 @@
                 -moz-transform: none;
                 -ms-transform: none;
             }
-            
+
             .lighthouse-header {
                 padding: 30px 20px;
             }
-            
+
             .lighthouse-form {
                 padding: 30px 20px;
             }
-            
+
             .lighthouse-title {
                 font-size: 24px;
             }
         }
-        
+
         /* Additional browser-specific fixes */
         @supports not (display: flex) {
             .lighthouse-login-page {
@@ -276,7 +279,7 @@
                 height: 100vh;
                 table-layout: fixed;
             }
-            
+
             .lighthouse-container {
                 display: table-cell;
                 vertical-align: middle;
@@ -289,8 +292,8 @@
             }
         }
     </style>
-    
-<script type="text/javascript">
+
+    <script type="text/javascript">
         var baseURL = "<?php echo base_url(); ?>";
     </script>
 </head>
@@ -300,12 +303,13 @@
         <div class="lighthouse-header">
             <div class="lighthouse-icon">
                 <!-- <i class="material-icons">lightbulb_outline</i> -->
-                  <img src="<?php echo base_url(); ?>assets/images/newsletter_logo_90.png" alt="Lighthouse Icon" class="icon-image">
+                <img src="<?php echo base_url(); ?>assets/images/newsletter_logo_90.png" alt="Lighthouse Icon"
+                    class="icon-image">
             </div>
             <h1 class="lighthouse-title">Lighthouse Newsletter</h1>
             <p class="lighthouse-subtitle">Guiding Light for Your Community</p>
         </div>
-        
+
         <div class="lighthouse-form">
             <div class="lighthouse-welcome">
                 <h3>Welcome Back</h3>
@@ -322,8 +326,7 @@
                 <?php
                 $this->load->helper('form');
                 $error = $this->session->flashdata('error');
-                if($error)
-                {
+                if ($error) {
                     ?>
                     <div class="alert alert-danger alert-dismissable">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -331,29 +334,29 @@
                     </div>
                 <?php }
                 $success = $this->session->flashdata('success');
-                if($success)
-                {
+                if ($success) {
                     ?>
                     <div class="alert alert-success alert-dismissable">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                         <?php echo $success; ?>
                     </div>
                 <?php } ?>
-                
+
                 <div class="lighthouse-input-group">
-                    <input type="email" class="lighthouse-input" name="email" placeholder="Email Address" required autofocus>
+                    <input type="email" class="lighthouse-input" name="email" placeholder="Email Address" required
+                        autofocus>
                     <i class="material-icons lighthouse-input-icon">person</i>
                 </div>
-                
+
                 <div class="lighthouse-input-group">
                     <input type="password" class="lighthouse-input" name="password" placeholder="Password" required>
                     <i class="material-icons lighthouse-input-icon">lock</i>
                 </div>
-                
+
                 <button class="lighthouse-btn" type="submit">Sign In</button>
             </form>
         </div>
-        
+
         <div class="lighthouse-footer">
             <p>&copy; 2025 Lighthouse Newsletter. Spreading God's light in our community.</p>
         </div>
