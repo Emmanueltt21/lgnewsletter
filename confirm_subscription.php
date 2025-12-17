@@ -1,6 +1,15 @@
 <?php
 // Include the NewsletterWrapper class
 require_once 'newsletter_wrapper.php';
+// Bootstrap CodeIgniter so we can use the configured Email library
+require_once 'index.php';
+// Get CI instance and ensure required libs/helpers are loaded
+$CI =& get_instance();
+if ($CI) {
+    $CI->load->database();
+    $CI->load->library('email');
+    $CI->load->helper('url');
+}
 
 // Get confirmation token from URL
 $token = $_GET['token'] ?? '';
@@ -49,11 +58,47 @@ function sendWelcomeEmail($email, $first_name, $newsletterWrapper) {
     try {
         // Get email settings
         $settings = $newsletterWrapper->getEmailSettings();
-        
-        // Use PHPMailer or mail() function for sending email
+
+        // Prefer configured SMTP via CodeIgniter's Email library over PHP mail()
+        if (isset($GLOBALS['CI']) && $GLOBALS['CI']) {
+            $CI = $GLOBALS['CI'];
+
+            $config = [
+                'protocol' => 'smtp',
+                'smtp_host' => $settings['smtp_host'] ?? '',
+                'smtp_port' => $settings['smtp_port'] ?? 587,
+                'smtp_user' => $settings['smtp_username'] ?? '',
+                'smtp_pass' => $settings['smtp_password'] ?? '',
+                'smtp_crypto' => $settings['smtp_encryption'] ?? 'tls',
+                'mailtype' => 'html',
+                'charset' => 'utf-8',
+                'newline' => "\r\n"
+            ];
+
+            $CI->email->initialize($config);
+
+            $subject = $settings['welcome_subject'] ?? 'Welcome to Lighthouse Global Missions!';
+            $message = getWelcomeEmailTemplate($first_name, $settings['email_signature'] ?? 'Blessings, Pastor Simon Mungwa');
+
+            $CI->email->from($settings['sender_email'] ?? 'pastorsimon@lgmissions.org', $settings['sender_name'] ?? 'Lighthouse Global Missions');
+            $CI->email->to($email);
+            $CI->email->subject($subject);
+            $CI->email->message($message);
+
+            $sent = $CI->email->send();
+
+            if (!$sent) {
+                $debug = $CI->email->print_debugger(['headers']);
+                @file_put_contents('debug.log', '[' . date('Y-m-d H:i:s') . "] Welcome email failed: " . $debug . "\n", FILE_APPEND);
+            }
+
+            return $sent;
+        }
+
+        // Fallback to PHP mail() if CI Email library isn't available
         $subject = $settings['welcome_subject'] ?? 'Welcome to Lighthouse Global Missions!';
         $message = getWelcomeEmailTemplate($first_name, $settings['email_signature'] ?? 'Blessings, Pastor Simon Mungwa');
-        
+
         $headers = [
             'MIME-Version: 1.0',
             'Content-type: text/html; charset=UTF-8',
@@ -61,9 +106,13 @@ function sendWelcomeEmail($email, $first_name, $newsletterWrapper) {
             'Reply-To: ' . ($settings['sender_email'] ?? 'pastorsimon@lgmissions.org'),
             'X-Mailer: PHP/' . phpversion()
         ];
-        
-        return mail($email, $subject, $message, implode("\r\n", $headers));
-        
+
+        $result = mail($email, $subject, $message, implode("\r\n", $headers));
+        if (!$result) {
+            @file_put_contents('debug.log', '[' . date('Y-m-d H:i:s') . "] Welcome email failed: PHP mail() returned false\n", FILE_APPEND);
+        }
+        return $result;
+
     } catch (Exception $e) {
         error_log("Welcome email error: " . $e->getMessage());
         return false;
