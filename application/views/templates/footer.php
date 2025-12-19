@@ -1,4 +1,3 @@
-
 <!-- Jquery Core Js -->
 <script src="<?php echo asset_url('plugins/jquery/jquery.min.js') ?>"></script>
 
@@ -24,10 +23,13 @@
 <script src="<?php echo asset_url('plugins/jquery-datatable/extensions/export/buttons.html5.min.js') ?>"></script>
 <script src="<?php echo asset_url('plugins/jquery-datatable/extensions/export/buttons.print.min.js') ?>"></script>
 <script src="<?php echo asset_url('plugins/jquery-datatable/extensions/export/dataTables.keyTable.min.js') ?>"></script>
-<script src="<?php echo asset_url('plugins/jquery-datatable/extensions/export/dataTables.responsive.min.js') ?>"></script>
-<script src="<?php echo asset_url('plugins/jquery-datatable/extensions/export/responsive.bootstrap.min.js') ?>"></script>
+<script
+    src="<?php echo asset_url('plugins/jquery-datatable/extensions/export/dataTables.responsive.min.js') ?>"></script>
+<script
+    src="<?php echo asset_url('plugins/jquery-datatable/extensions/export/responsive.bootstrap.min.js') ?>"></script>
 <script src="<?php echo asset_url('plugins/jquery-datatable/extensions/export/dataTables.scroller.min.js') ?>"></script>
-<script src="<?php echo asset_url('plugins/jquery-datatable/extensions/export/dataTables.fixedHeader.min.js') ?>"></script>
+<script
+    src="<?php echo asset_url('plugins/jquery-datatable/extensions/export/dataTables.fixedHeader.min.js') ?>"></script>
 <script src="<?php echo asset_url('plugins/jquery-slimscroll/jquery.slimscroll.js') ?>"></script>
 <script src="<?php echo asset_url('js/pages/tables/jquery-datatable.js') ?>"></script>
 <script src="<?php echo asset_url('plugins/bootstrap-notify/bootstrap-notify.js') ?>"></script>
@@ -36,80 +38,129 @@
 <script src="<?php echo asset_url('plugins/bootstrap-select/js/bootstrap-select.js') ?>"></script>
 <script src="<?php echo asset_url('plugins/dropify/dist/js/dropify.min.js') ?>"></script>
 <script src="<?php echo asset_url('plugins/momentjs/moment.js') ?>"></script>
-<script src="<?php echo asset_url('plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') ?>"></script>
+<script
+    src="<?php echo asset_url('plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') ?>"></script>
 <script src="<?php echo asset_url('plugins/bootstrap-daterange/daterangepicker.js') ?>"></script>
 <!-- LAYOUT JS -->
 <script src="<?php echo asset_url('js/ajax.js') ?>"></script>
 <script>
-tinymce.init({
-    selector: ".editor1",
-    theme: "modern",
-    height: 100,
-    inline_styles : true,
-    valid_elements : '*[*]',
-    plugins: [
-        'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-        'searchreplace wordcount visualblocks visualchars code fullscreen',
-        'insertdatetime media nonbreaking save table contextmenu directionality',
-        'emoticons template paste textcolor colorpicker textpattern imagetools'
-    ],
-    toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-    toolbar2: 'print preview media | forecolor backcolor emoticons',
-    image_advtab: true
-});
-tinymce.init({
-    selector: ".editor",
-    theme: "modern",
-    height: 300,
-    inline_styles : true,
-    valid_elements : '*[*]',
-    plugins: [
-        'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-        'searchreplace wordcount visualblocks visualchars code fullscreen',
-        'insertdatetime media nonbreaking save table contextmenu directionality',
-        'emoticons template paste textcolor colorpicker textpattern imagetools'
-    ],
-    toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-    toolbar2: 'print preview media | forecolor backcolor emoticons',
-    image_advtab: true
-});
-$(function() {
-    if(document.getElementById('reportrange')==undefined)return;
-    var date = document.getElementById('reportrange').value;
-    var res = date.split(" - ");
-    var start = 0;
-    var end = 0;
-    if(res[0] != undefined && res[1] != undefined){
-       start = res[0];
-       end = res[1];
-    }else{
-      start = (moment().subtract(0, 'days')).format('YYYY-MM-DD');
-      end = (moment()).format('YYYY-MM-DD');
-    }
+    tinymce.init({
+        selector: ".editor1",
+        theme: "modern",
+        height: 100,
+        inline_styles: true,
+        valid_elements: '*[*]',
+        plugins: [
+            'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+            'searchreplace wordcount visualblocks visualchars code fullscreen',
+            'insertdatetime media nonbreaking save table contextmenu directionality',
+            'emoticons template paste textcolor colorpicker textpattern imagetools'
+        ],
+        toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+        toolbar2: 'print preview media | forecolor backcolor emoticons',
+        image_advtab: true
+    });
+    tinymce.init({
+        selector: ".editor",
+        theme: "modern",
+        height: 300,
+        inline_styles: true,
+        valid_elements: '*[*]',
+        plugins: [
+            'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+            'searchreplace wordcount visualblocks visualchars code fullscreen',
+            'insertdatetime media nonbreaking save table contextmenu directionality',
+            'emoticons template paste textcolor colorpicker textpattern imagetools'
+        ],
+        toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+        toolbar2: 'print preview media | forecolor backcolor emoticons',
+        image_advtab: true,
+        paste_data_images: true,
+        images_upload_url: '<?php echo base_url("newsletter/upload_image"); ?>',
+        automatic_uploads: true,
+        file_picker_types: 'image',
+        file_picker_callback: function(cb, value, meta) {
+            var input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
 
-    function cb(start, end) {
-        $('#reportrange span').html(start + ' - ' + end);
-    }
+            input.onchange = function() {
+                var file = this.files[0];
+                var reader = new FileReader();
 
-    $('#reportrange').daterangepicker({
-        startDate: start,
-        endDate: end,
-        locale: {
-          format: 'YYYY-MM-DD'
-        },
-        ranges: {
-           'Today': [moment(), moment()],
-           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-           'This Month': [moment().startOf('month'), moment().endOf('month')],
-           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                // Create a FormData object to send the file
+                var formData = new FormData();
+                formData.append('file', file);
+
+                // Send the file to the server
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '<?php echo base_url("newsletter/upload_image"); ?>');
+                
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var json;
+                        try {
+                            json = JSON.parse(xhr.responseText);
+                        } catch (e) {
+                            console.error('Invalid JSON: ' + xhr.responseText);
+                            return;
+                        }
+
+                        if (!json || typeof json.location != 'string') {
+                            console.error('Invalid JSON: ' + xhr.responseText);
+                            return;
+                        }
+
+                        // Call the callback with the location of the uploaded file
+                        cb(json.location, { title: file.name });
+                    } else {
+                        console.error('HTTP Error: ' + xhr.status);
+                    }
+                };
+
+                xhr.send(formData);
+            };
+
+            input.click();
         }
-    }, cb);
+    });
+    $(function () {
+        if (document.getElementById('reportrange') == undefined) return;
+        var date = document.getElementById('reportrange').value;
+        var res = date.split(" - ");
+        var start = 0;
+        var end = 0;
+        if (res[0] != undefined && res[1] != undefined) {
+            start = res[0];
+            end = res[1];
+        } else {
+            start = (moment().subtract(0, 'days')).format('YYYY-MM-DD');
+            end = (moment()).format('YYYY-MM-DD');
+        }
 
-    cb(start, end);
+        function cb(start, end) {
+            $('#reportrange span').html(start + ' - ' + end);
+        }
 
-});
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            locale: {
+                format: 'YYYY-MM-DD'
+            },
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
 </script>
 <script src="<?php echo asset_url('js/common.js') ?>"></script>
 </body>
