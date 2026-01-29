@@ -131,9 +131,9 @@ function getWelcomeEmailTemplate($first_name, $signature) {
         <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #1f2937 0%, #374151 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .header { background: linear-gradient(135deg, #1da2f0 0%, #374151 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
             .content { background: #f8fafc; padding: 30px; border-radius: 0 0 10px 10px; }
-            .highlight { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+            .highlight { background: linear-gradient(135deg, #1da2f0 0%, #374151 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
             .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
         </style>
     </head>
@@ -191,7 +191,7 @@ function showSuccessPage($first_name) {
                 font-family: 'Inter', sans-serif;
                 line-height: 1.6;
                 color: #333;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #1da2f0 0%, #374151 100%);
                 min-height: 100vh;
                 display: flex;
                 align-items: center;
@@ -294,7 +294,7 @@ function showSuccessPage($first_name) {
 
             .cta-button {
                 display: inline-block;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #1da2f0 0%, #374151 100%);
                 color: white;
                 padding: 1rem 2rem;
                 text-decoration: none;
