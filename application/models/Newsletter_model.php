@@ -1,83 +1,90 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Newsletter_model extends CI_Model {
+class Newsletter_model extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
         $this->load->library('email');
     }
 
     // Admin authentication methods
-    public function verify_admin_credentials($username, $password) {
+    public function verify_admin_credentials($username, $password)
+    {
         $admin = $this->db->get_where('admin_users', [
             'username' => $username,
             'status' => 'active'
         ])->row();
-        
+
         if ($admin && password_verify($password, $admin->password)) {
             return $admin;
         }
-        
+
         return false;
     }
 
-    public function update_last_login($admin_id) {
+    public function update_last_login($admin_id)
+    {
         $this->db->where('id', $admin_id);
         $this->db->update('admin_users', ['last_login' => date('Y-m-d H:i:s')]);
     }
 
     // Dashboard statistics
-    public function get_dashboard_stats() {
+    public function get_dashboard_stats()
+    {
         $stats = [];
-        
+
         // Total subscribers
         $stats['total_subscribers'] = $this->db->count_all('newsletter_subscribers');
-        
+
         // Confirmed subscribers
         $stats['confirmed_subscribers'] = $this->db->where('status', 'confirmed')
-                                                  ->count_all_results('newsletter_subscribers');
-        
+            ->count_all_results('newsletter_subscribers');
+
         // Pending confirmations
         $stats['pending_confirmations'] = $this->db->where('status', 'pending')
-                                                   ->count_all_results('newsletter_subscribers');
-        
+            ->count_all_results('newsletter_subscribers');
+
         // Sent newsletters
         $stats['sent_newsletters'] = $this->db->where('status', 'sent')
-                                              ->count_all_results('newsletters');
-        
+            ->count_all_results('newsletters');
+
         // Recent subscriptions (last 30 days)
         $stats['recent_subscriptions'] = $this->db->where('subscribed_at >=', date('Y-m-d H:i:s', strtotime('-30 days')))
-                                                  ->count_all_results('newsletter_subscribers');
-        
+            ->count_all_results('newsletter_subscribers');
+
         return $stats;
     }
 
     // Subscriber methods
-    public function get_subscribers($filter = 'all', $limit = null, $offset = 0) {
+    public function get_subscribers($filter = 'all', $limit = null, $offset = 0)
+    {
         $this->db->select('*');
         $this->db->from('newsletter_subscribers');
-        
+
         if ($filter !== 'all') {
             $this->db->where('status', $filter);
         }
-        
+
         $this->db->order_by('subscribed_at', 'DESC');
-        
+
         if ($limit) {
             $this->db->limit($limit, $offset);
         }
-        
+
         return $this->db->get()->result();
     }
 
-    public function get_subscribers_by_filter($search = null, $status = 'all', $date_range = 'all') {
+    public function get_subscribers_by_filter($search = null, $status = 'all', $date_range = 'all')
+    {
         $this->db->select('id, first_name, last_name, email, status, subscribed_at, confirmed_at, 
                           CONCAT(first_name, " ", last_name) as name, 
                           subscribed_at as created_at');
         $this->db->from('newsletter_subscribers');
-        
+
         // Apply search filter
         if (!empty($search)) {
             $this->db->group_start();
@@ -86,12 +93,12 @@ class Newsletter_model extends CI_Model {
             $this->db->or_like('email', $search);
             $this->db->group_end();
         }
-        
+
         // Apply status filter
         if ($status !== 'all') {
             $this->db->where('status', $status);
         }
-        
+
         // Apply date range filter
         if ($date_range !== 'all') {
             switch ($date_range) {
@@ -109,38 +116,43 @@ class Newsletter_model extends CI_Model {
                     break;
             }
         }
-        
+
         $this->db->order_by('subscribed_at', 'DESC');
-        
+
         return $this->db->get()->result();
     }
 
-    public function get_subscriber_stats() {
+    public function get_subscriber_stats()
+    {
         $stats = [];
-        
+
         $stats['all'] = $this->db->count_all('newsletter_subscribers');
         $stats['confirmed'] = $this->db->where('status', 'confirmed')->count_all_results('newsletter_subscribers');
         $stats['pending'] = $this->db->where('status', 'pending')->count_all_results('newsletter_subscribers');
         $stats['unsubscribed'] = $this->db->where('status', 'unsubscribed')->count_all_results('newsletter_subscribers');
-        
+
         return $stats;
     }
 
-    public function get_subscriber_by_id($id) {
+    public function get_subscriber_by_id($id)
+    {
         return $this->db->get_where('newsletter_subscribers', ['id' => $id])->row();
     }
 
-    public function get_confirmed_subscribers() {
+    public function get_confirmed_subscribers()
+    {
         return $this->db->get_where('newsletter_subscribers', ['status' => 'confirmed'])->result();
     }
 
     // Find subscriber by email
-    public function get_subscriber_by_email($email) {
+    public function get_subscriber_by_email($email)
+    {
         return $this->db->get_where('newsletter_subscribers', ['email' => $email])->row();
     }
 
     // Add new subscriber as confirmed, or confirm existing one
-    public function add_subscriber_confirmed($first_name, $last_name, $email, $ip_address = null, $user_agent = null) {
+    public function add_subscriber_confirmed($first_name, $last_name, $email, $ip_address = null, $user_agent = null)
+    {
         $existing = $this->get_subscriber_by_email($email);
         $now = date('Y-m-d H:i:s');
 
@@ -152,8 +164,12 @@ class Newsletter_model extends CI_Model {
                 'confirmed_at' => $now,
                 'unsubscribed_at' => null
             ];
-            if ($ip_address) { $data['ip_address'] = $ip_address; }
-            if ($user_agent) { $data['user_agent'] = $user_agent; }
+            if ($ip_address) {
+                $data['ip_address'] = $ip_address;
+            }
+            if ($user_agent) {
+                $data['user_agent'] = $user_agent;
+            }
 
             $this->db->where('id', $existing->id);
             return $this->db->update('newsletter_subscribers', $data);
@@ -175,100 +191,111 @@ class Newsletter_model extends CI_Model {
         }
     }
 
-    public function get_recent_subscribers($limit = 5) {
+    public function get_recent_subscribers($limit = 5)
+    {
         $this->db->select('first_name, last_name, email, status, subscribed_at');
         $this->db->from('newsletter_subscribers');
         $this->db->order_by('subscribed_at', 'DESC');
         $this->db->limit($limit);
-        
+
         return $this->db->get()->result();
     }
 
-    public function delete_subscriber($id) {
+    public function delete_subscriber($id)
+    {
         $this->db->trans_start();
-        
+
         // Delete from email history first (foreign key constraint)
         $this->db->delete('email_history', ['subscriber_id' => $id]);
-        
+
         // Delete subscriber
         $this->db->delete('newsletter_subscribers', ['id' => $id]);
-        
+
         $this->db->trans_complete();
-        
+
         return $this->db->trans_status();
     }
 
-    public function get_all_subscribers_for_export() {
+    public function get_all_subscribers_for_export()
+    {
         $this->db->select('first_name, last_name, email, status, subscribed_at, confirmed_at');
         $this->db->from('newsletter_subscribers');
         $this->db->order_by('subscribed_at', 'DESC');
-        
+
         return $this->db->get()->result();
     }
 
     // Newsletter methods
-    public function get_newsletters($limit = null, $offset = 0) {
+    public function get_newsletters($limit = null, $offset = 0)
+    {
         $this->db->select('n.*, au.username as created_by_username');
         $this->db->from('newsletters n');
         $this->db->join('admin_users au', 'n.created_by = au.id', 'left');
         $this->db->order_by('n.created_at', 'DESC');
-        
+
         if ($limit) {
             $this->db->limit($limit, $offset);
         }
-        
+
         return $this->db->get()->result();
     }
 
-    public function get_newsletter_by_id($id) {
+    public function get_newsletter_by_id($id)
+    {
         return $this->db->get_where('newsletters', ['id' => $id])->row();
     }
 
-    public function get_recent_newsletters($limit = 5) {
+    public function get_recent_newsletters($limit = 5)
+    {
         $this->db->select('subject, status, recipients_count, created_at, sent_at');
         $this->db->from('newsletters');
         $this->db->order_by('created_at', 'DESC');
         $this->db->limit($limit);
-        
+
         return $this->db->get()->result();
     }
 
-    public function create_newsletter($data) {
+    public function create_newsletter($data)
+    {
         $data['created_at'] = date('Y-m-d H:i:s');
         $this->db->insert('newsletters', $data);
         return $this->db->insert_id();
     }
 
-    public function update_newsletter($id, $data) {
+    public function update_newsletter($id, $data)
+    {
         $this->db->where('id', $id);
         return $this->db->update('newsletters', $data);
     }
 
-    public function delete_newsletter($id) {
+    public function delete_newsletter($id)
+    {
         $this->db->trans_start();
-        
+
         // Delete from email history first (foreign key constraint)
         $this->db->delete('email_history', ['newsletter_id' => $id]);
-        
+
         // Delete newsletter
         $this->db->delete('newsletters', ['id' => $id]);
-        
+
         $this->db->trans_complete();
-        
+
         return $this->db->trans_status();
     }
 
     // Admin helper: resolve admin_users.id by email
-    public function get_admin_id_by_email($email) {
+    public function get_admin_id_by_email($email)
+    {
         if (empty($email)) {
             return null;
         }
         $admin = $this->db->select('id')->get_where('admin_users', ['email' => $email])->row();
-        return $admin ? (int)$admin->id : null;
+        return $admin ? (int) $admin->id : null;
     }
 
     // Admin helper: get a default active admin id (fallback)
-    public function get_default_admin_id() {
+    public function get_default_admin_id()
+    {
         // Prefer super_admins, otherwise any active admin
         $admin = $this->db
             ->select('id')
@@ -278,7 +305,7 @@ class Newsletter_model extends CI_Model {
             ->get('admin_users')
             ->row();
         if ($admin) {
-            return (int)$admin->id;
+            return (int) $admin->id;
         }
         $admin = $this->db
             ->select('id')
@@ -286,41 +313,44 @@ class Newsletter_model extends CI_Model {
             ->order_by('id', 'ASC')
             ->get('admin_users')
             ->row();
-        return $admin ? (int)$admin->id : null;
+        return $admin ? (int) $admin->id : null;
     }
 
-    public function get_newsletter_stats() {
+    public function get_newsletter_stats()
+    {
         $stats = new stdClass();
-        
+
         // Total newsletters
         $stats->total_newsletters = $this->db->count_all('newsletters');
-        
+
         // Draft newsletters
         $this->db->where('status', 'draft');
         $stats->draft_newsletters = $this->db->count_all_results('newsletters');
-        
+
         // Sent newsletters
         $this->db->where('status', 'sent');
         $stats->sent_newsletters = $this->db->count_all_results('newsletters');
-        
+
         // Recent newsletters (last 30 days)
         $this->db->where('created_at >=', date('Y-m-d H:i:s', strtotime('-30 days')));
         $stats->recent_newsletters = $this->db->count_all_results('newsletters');
-        
+
         return $stats;
     }
 
-    public function get_all_newsletters_for_export() {
+    public function get_all_newsletters_for_export()
+    {
         $this->db->select('subject, status, recipients_count, created_at, sent_at');
         $this->db->order_by('created_at', 'DESC');
         return $this->db->get('newsletters')->result();
     }
 
     // Email methods
-    public function send_newsletter_email($newsletter, $subscriber) {
+    public function send_newsletter_email($newsletter, $subscriber)
+    {
         try {
             $settings = $this->get_email_settings();
-            
+
             // Configure email
             $config = [
                 'protocol' => 'smtp',
@@ -333,27 +363,40 @@ class Newsletter_model extends CI_Model {
                 'charset' => 'utf-8',
                 'newline' => "\r\n"
             ];
-            
+
             $this->email->initialize($config);
-            
+
+            // Inline-embed logo for reliable rendering in email clients
+            $logo_cid = null;
+            $logo_path = FCPATH . 'assets/images/newsletter_logo_90.png';
+            if (is_file($logo_path)) {
+                $this->email->attach($logo_path, 'inline');
+                $logo_cid = $this->email->attachment_cid($logo_path);
+            } else {
+                error_log("Newsletter Logo not found at: " . $logo_path);
+            }
+
             // Prepare email content
-            $email_content = $this->prepare_newsletter_content($newsletter, $subscriber, $settings);
-            
+            $email_content = $this->prepare_newsletter_content($newsletter, $subscriber, $settings, $logo_cid);
+
+            // Embed any local images found in the content
+            $this->embed_images_in_content($email_content);
+
             // Fallback to settings sender details if newsletter lacks them
-            $from_email = (!empty($newsletter->sender_email) && filter_var($newsletter->sender_email, FILTER_VALIDATE_EMAIL)) 
-                ? $newsletter->sender_email 
+            $from_email = (!empty($newsletter->sender_email) && filter_var($newsletter->sender_email, FILTER_VALIDATE_EMAIL))
+                ? $newsletter->sender_email
                 : (isset($settings['sender_email']) ? $settings['sender_email'] : null);
-            $from_name = !empty($newsletter->sender_name) 
-                ? $newsletter->sender_name 
+            $from_name = !empty($newsletter->sender_name)
+                ? $newsletter->sender_name
                 : (isset($settings['sender_name']) ? $settings['sender_name'] : '');
 
             $this->email->from($from_email, $from_name);
             $this->email->to($subscriber->email);
             $this->email->subject($newsletter->subject);
             $this->email->message($email_content);
-            
+
             $result = $this->email->send();
-            
+
             // Log email history
             $this->log_email_history(
                 $subscriber->id,
@@ -365,12 +408,12 @@ class Newsletter_model extends CI_Model {
                 $result ? 'sent' : 'failed',
                 $result ? null : $this->email->print_debugger()
             );
-            
+
             return $result;
-            
+
         } catch (Exception $e) {
             error_log("Newsletter email error: " . $e->getMessage());
-            
+
             // Log failed email
             $this->log_email_history(
                 $subscriber->id,
@@ -382,22 +425,23 @@ class Newsletter_model extends CI_Model {
                 'failed',
                 $e->getMessage()
             );
-            
+
             return false;
         }
     }
 
-    public function resend_confirmation_email($subscriber) {
+    public function resend_confirmation_email($subscriber)
+    {
         try {
             $settings = $this->get_email_settings();
-            
+
             // Generate new confirmation token
             $confirmation_token = bin2hex(random_bytes(32));
-            
+
             // Update subscriber with new token
             $this->db->where('id', $subscriber->id);
             $this->db->update('newsletter_subscribers', ['confirmation_token' => $confirmation_token]);
-            
+
             // Configure email
             $config = [
                 'protocol' => 'smtp',
@@ -410,9 +454,9 @@ class Newsletter_model extends CI_Model {
                 'charset' => 'utf-8',
                 'newline' => "\r\n"
             ];
-            
+
             $this->email->initialize($config);
-            
+
             // Email content
             $confirmation_url = base_url() . "confirm_subscription.php?token=" . $confirmation_token;
 
@@ -431,14 +475,14 @@ class Newsletter_model extends CI_Model {
                 $logo_cid,
                 isset($settings['site_url']) ? $settings['site_url'] : null
             );
-            
+
             $this->email->from($settings['sender_email'], $settings['sender_name']);
             $this->email->to($subscriber->email);
             $this->email->subject($settings['confirmation_subject']);
             $this->email->message($message);
-            
+
             $result = $this->email->send();
-            
+
             // Log email history
             $this->log_email_history(
                 $subscriber->id,
@@ -450,9 +494,9 @@ class Newsletter_model extends CI_Model {
                 $result ? 'sent' : 'failed',
                 $result ? null : $this->email->print_debugger()
             );
-            
+
             return $result;
-            
+
         } catch (Exception $e) {
             error_log("Confirmation email error: " . $e->getMessage());
             return false;
@@ -460,18 +504,20 @@ class Newsletter_model extends CI_Model {
     }
 
     // Email history methods
-    public function get_email_history($limit = 100, $offset = 0) {
+    public function get_email_history($limit = 100, $offset = 0)
+    {
         $this->db->select('eh.*, ns.first_name, ns.last_name, n.subject as newsletter_subject');
         $this->db->from('email_history eh');
         $this->db->join('newsletter_subscribers ns', 'eh.subscriber_id = ns.id', 'left');
         $this->db->join('newsletters n', 'eh.newsletter_id = n.id', 'left');
         $this->db->order_by('eh.created_at', 'DESC');
         $this->db->limit($limit, $offset);
-        
+
         return $this->db->get()->result();
     }
 
-    public function log_email_history($subscriber_id, $recipient_email, $recipient_name, $subject, $email_type, $newsletter_id = null, $status = 'sent', $error_message = null) {
+    public function log_email_history($subscriber_id, $recipient_email, $recipient_name, $subject, $email_type, $newsletter_id = null, $status = 'sent', $error_message = null)
+    {
         $data = [
             'recipient_email' => $recipient_email,
             'recipient_name' => $recipient_name,
@@ -484,40 +530,44 @@ class Newsletter_model extends CI_Model {
             'error_message' => $error_message,
             'created_at' => date('Y-m-d H:i:s')
         ];
-        
+
         return $this->db->insert('email_history', $data);
     }
 
     // Settings methods
-    public function get_email_settings() {
+    public function get_email_settings()
+    {
         $settings_query = $this->db->get('newsletter_settings');
         $settings_raw = $settings_query->result_array();
-        
+
         $settings = [];
         foreach ($settings_raw as $setting) {
             $settings[$setting['setting_key']] = $setting['setting_value'];
         }
-        
+
         return $settings;
     }
 
-    public function get_all_settings() {
+    public function get_all_settings()
+    {
         $settings_raw = $this->db->get('newsletter_settings')->result();
-        
+
         $settings = [];
         foreach ($settings_raw as $setting) {
             $settings[$setting->setting_key] = $setting->setting_value;
         }
-        
+
         return $settings;
     }
 
-    public function get_setting($key) {
+    public function get_setting($key)
+    {
         $setting = $this->db->get_where('newsletter_settings', ['setting_key' => $key])->row();
         return $setting ? $setting->setting_value : null;
     }
 
-    public function update_setting($key, $value) {
+    public function update_setting($key, $value)
+    {
         $this->db->where('setting_key', $key);
         return $this->db->update('newsletter_settings', [
             'setting_value' => $value,
@@ -526,74 +576,83 @@ class Newsletter_model extends CI_Model {
     }
 
     // Helper methods
-    public function delete_subscribers($subscriber_ids) {
+    public function delete_subscribers($subscriber_ids)
+    {
         if (empty($subscriber_ids) || !is_array($subscriber_ids)) {
             return false;
         }
-        
+
         $this->db->trans_start();
-        
+
         // Delete from email history first (foreign key constraint)
         $this->db->where_in('subscriber_id', $subscriber_ids);
         $this->db->delete('email_history');
-        
+
         // Delete subscribers
         $this->db->where_in('id', $subscriber_ids);
         $this->db->delete('newsletter_subscribers');
-        
+
         $this->db->trans_complete();
-        
+
         return $this->db->trans_status();
     }
 
-    public function resend_confirmation_emails($subscriber_ids) {
+    public function resend_confirmation_emails($subscriber_ids)
+    {
         if (empty($subscriber_ids) || !is_array($subscriber_ids)) {
             return false;
         }
-        
+
         $success_count = 0;
-        
+
         foreach ($subscriber_ids as $id) {
             $subscriber = $this->get_subscriber_by_id($id);
-            
+
             if ($subscriber && $subscriber->status === 'pending') {
                 if ($this->resend_confirmation_email($subscriber)) {
                     $success_count++;
                 }
             }
         }
-        
+
         return $success_count > 0;
     }
 
-    private function prepare_newsletter_content($newsletter, $subscriber, $settings) {
+    private function prepare_newsletter_content($newsletter, $subscriber, $settings, $logo_cid = null)
+    {
         $content = $newsletter->content;
-        
+
         // Replace placeholders
         $content = str_replace('[FIRST_NAME]', $subscriber->first_name, $content);
         $content = str_replace('[LAST_NAME]', $subscriber->last_name, $content);
         $content = str_replace('[EMAIL]', $subscriber->email, $content);
-        
+
         // Add unsubscribe link
         $unsubscribe_url = base_url() . "unsubscribe.php?email=" . urlencode($subscriber->email);
         $unsubscribe_link = "<p style='text-align: center; margin-top: 30px; font-size: 12px; color: #666;'>";
         $unsubscribe_link .= "If you no longer wish to receive these emails, you can <a href='{$unsubscribe_url}'>unsubscribe here</a>.";
         $unsubscribe_link .= "</p>";
-        
+
+        $site_url = isset($settings['site_url']) ? $settings['site_url'] : null;
+
         // Wrap in email template
-        $email_template = $this->get_newsletter_email_template($content . $unsubscribe_link, $settings['email_signature']);
-        
+        $email_template = $this->get_newsletter_email_template($content . $unsubscribe_link, $settings['email_signature'], $logo_cid, $site_url);
+
         return $email_template;
     }
 
-    private function get_newsletter_email_template($content, $signature) {
+    private function get_newsletter_email_template($content, $signature, $logo_cid = null, $site_url = null)
+    {
+        $base = $site_url ? rtrim($site_url, '/') . '/' : base_url();
+        $logo_src = $logo_cid ? ('cid:' . $logo_cid) : ($base . "assets/images/newsletter_logo_90.png");
+
         return "
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset='UTF-8'>
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Newsletter - Lighthouse Global Missions</title>
+        
             <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -606,7 +665,7 @@ class Newsletter_model extends CI_Model {
         <body>
             <div class='container'>
                 <div class='header'>
-                    <img src='" . base_url() . "assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
+                    <img src='" . $logo_src . "' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
                     <h1> Lighthouse Global Missions</h1>
                     <p>Ministry Updates</p>
                 </div>
@@ -624,7 +683,8 @@ class Newsletter_model extends CI_Model {
         </html>";
     }
 
-    private function get_confirmation_email_template($first_name, $confirmation_url, $signature, $logo_cid = null, $site_url = null) {
+    private function get_confirmation_email_template($first_name, $confirmation_url, $signature, $logo_cid = null, $site_url = null)
+    {
         $base = $site_url ? rtrim($site_url, '/') . '/' : base_url();
         $logo_src = $logo_cid ? ('cid:' . $logo_cid) : ($base . "assets/images/newsletter_logo_90.png");
 
@@ -672,6 +732,64 @@ class Newsletter_model extends CI_Model {
             </div>
         </body>
         </html>";
+    }
+
+    private function embed_images_in_content(&$content)
+    {
+        // Find all images
+        preg_match_all('/<img[^>]+src="([^">]+)"/i', $content, $matches);
+
+        if (empty($matches[1])) {
+            return;
+        }
+
+        $unique_images = array_unique($matches[1]);
+
+        foreach ($unique_images as $src) {
+            // Parse the URL path
+            $path = parse_url($src, PHP_URL_PATH);
+            if (!$path)
+                continue;
+
+            // Clean path (remove query string if parse_url didn't catches it, though PHP_URL_PATH should)
+            $path = urldecode($path);
+
+            // Potential file paths to check
+            $candidates = [];
+
+            // 1. Direct appended to FCPATH (e.g. /Applications/XAMPP.../uploads/foo.jpg)
+            // strip leading slash from path
+            $rel_path = ltrim($path, '/');
+            $candidates[] = FCPATH . $rel_path;
+
+            // 2. Handle subfolder installation (e.g. /lgnewsletter/uploads/foo.jpg)
+            // If path starts with a segment that matches the end of FCPATH, strip it.
+            // Simple heuristic: try removing the first directory segment
+            $parts = explode('/', $rel_path, 2);
+            if (count($parts) > 1) {
+                $candidates[] = FCPATH . $parts[1];
+            }
+
+            $found_file = false;
+            foreach ($candidates as $file_path) {
+                if (file_exists($file_path)) {
+                    // Attach inline
+                    $this->email->attach($file_path, 'inline');
+                    $cid = $this->email->attachment_cid($file_path);
+
+                    if ($cid) {
+                        // Replace all occurrences of this src with cid
+                        $content = str_replace($src, 'cid:' . $cid, $content);
+                        $found_file = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!$found_file) {
+                error_log("Embed Image Failed: Could not find file for src: $src. Checked: " . implode(', ', $candidates));
+            }
+        }
     }
 }
 ?>

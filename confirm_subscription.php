@@ -1,8 +1,9 @@
 <?php
 // Include the NewsletterWrapper class
 require_once 'newsletter_wrapper.php';
-// Bootstrap CodeIgniter so we can use the configured Email library
+ob_start();
 require_once 'index.php';
+ob_end_clean();
 // Get CI instance and ensure required libs/helpers are loaded
 $CI =& get_instance();
 if ($CI) {
