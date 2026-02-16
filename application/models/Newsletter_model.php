@@ -708,7 +708,7 @@ class Newsletter_model extends CI_Model
                              </td>
               
                              <td align='center' style='padding:0 40px;'>
-                               <img src='https://via.placeholder.com/60x60?text=Logo'
+                               <img src='https://newsletter.yourdailylight.org/assets/images/newsletter_logo_90.png'
                                     width='60'
                                     alt='Logo'
                                     style='display:block;'>
