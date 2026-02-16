@@ -708,7 +708,7 @@ class Newsletter_model extends CI_Model
                              </td>
               
                              <td align='center' style='padding:0 40px;'>
-                               <img src='https://newsletter.yourdailylight.org/assets/images/newsletter_logo_90.png'
+                               <img src='https://newsletter.lighthouseglobalmissions.org/assets/images/newsletter_logo_90.png'
                                     width='60'
                                     alt='Logo'
                                     style='display:block;'>
