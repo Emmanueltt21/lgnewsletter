@@ -166,6 +166,116 @@ function getWelcomeEmailTemplate($first_name, $signature) {
                 </div>
             </div>
         </div>
+        <table width='100%' cellpadding='0' cellspacing='0' border='0' style='background-color:#e6e6e6; padding:30px 0;'>
+          <tr>
+            <td align='center'>
+              
+              <table width='700' cellpadding='0' cellspacing='0' border='0' style='background-color:#1f3550; font-family:Arial, Helvetica, sans-serif;'>
+                
+                 <tr>
+                   <td align='center' style='padding:20px 0; background-color:#3c567c; color:#ffffff; font-size:14px; letter-spacing:1px;'>
+                     <a href='https://www.lgmissions.org' style='color:#ffffff; text-decoration:none; margin:0 30px;'>ABOUT</a>
+                     <a href='https://www.lgmissions.org' style='color:#ffffff; text-decoration:none; margin:0 30px;'>EVENTS</a>
+                   </td>
+                 </tr>
+      
+                 <tr>
+                   <td align='center' style='padding:25px 0;'>
+                     
+                     <table cellpadding='0' cellspacing='0' border='0'>
+                       <tr>
+                         
+                         <td align='center' style='padding-right:40px;'>
+                           <a href='https://paypal.me/LGmissions?country.x=DE&locale.x=en_US'
+                              style='background-color:#c4312b; color:#ffffff;
+                                     padding:12px 35px;
+                                     text-decoration:none;
+                                     border-radius:25px;
+                                     font-weight:bold;
+                                     letter-spacing:4px;
+                                     display:inline-block;'>
+                             GIVE
+                           </a>
+                         </td>
+      
+                         <td align='center' style='padding:0 40px;'>
+                           <img src='https://via.placeholder.com/60x60?text=Logo'
+                                width='60'
+                                alt='Logo'
+                                style='display:block;'>
+                         </td>
+      
+                         <td align='center' style='padding-left:40px;'>
+                           <a href='#'
+                              style='background-color:#4b6f9d;
+                                     color:#ffffff;
+                                     padding:12px 30px;
+                                     text-decoration:none;
+                                     border-radius:25px;
+                                     display:inline-block;'>
+                             Let’s pray for you!
+                           </a>
+                         </td>
+      
+                       </tr>
+                     </table>
+      
+                   </td>
+                 </tr>
+      
+                 <tr>
+                   <td align='center' style='padding:20px 40px 40px 40px;'>
+                     
+                     <table width='100%' cellpadding='0' cellspacing='0' border='0'
+                            style='border:1px solid #9fb3c9; padding:30px;'>
+                       
+                       <tr>
+                         <td align='center' style='color:#ffffff;'>
+                           
+                           <h2 style='margin:0 0 20px 0; font-size:24px; letter-spacing:1px;'>
+                             Lighthouse Global Missions
+      
+                           </h2>
+      
+                           <p style='margin:0 0 15px 0; font-size:14px; color:#cdd6e0;'>
+                             Copyright © " . date('Y') . " Lighthouse Global Missions. All rights reserved.
+                           </p>
+      
+                           <p style='margin:0 0 25px 0; font-size:13px; color:#cdd6e0;'>
+                             You are subscribed to LG Missions newsletter |  Unsubscribe
+                           </p>
+      
+                           <p style='margin:0;'>
+                             <a href='#' style='margin:0 8px;'>
+                               <img src='https://cdn-icons-png.flaticon.com/512/733/733547.png' width='18' alt='Facebook'>
+                             </a>
+                             <a href='#' style='margin:0 8px;'>
+                               <img src='https://cdn-icons-png.flaticon.com/512/733/733558.png' width='18' alt='Instagram'>
+                             </a>
+                             <a href='#' style='margin:0 8px;'>
+                               <img src='https://cdn-icons-png.flaticon.com/512/3670/3670358.png' width='18' alt='TIKTOK'>
+                             </a>
+                             <a href='#' style='margin:0 8px;'>
+                               <img src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png' width='18' alt='YouTube'>
+                             </a>
+                             <a href='#' style='margin:0 8px;'>
+                               <img src='https://cdn-icons-png.flaticon.com/512/561/561127.png' width='18' alt='Email'>
+                             </a>
+                           </p>
+      
+                         </td>
+                       </tr>
+      
+                     </table>
+      
+                   </td>
+                 </tr>
+      
+               </table>
+      
+             </td>
+           </tr>
+         </table>
     </body>
     </html>";
 }
