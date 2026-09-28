@@ -638,7 +638,7 @@ class Newsletter_model extends CI_Model
             <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: linear-gradient(135deg, #1f2937 0%, #374151 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                .header { background: linear-gradient(135deg, #1da2f0 0%, #374151  100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
                 .content { background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; }
                 .signature { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
             </style>
@@ -648,7 +648,7 @@ class Newsletter_model extends CI_Model
                 <div class='header'>
                     <img src='" . $logo_src . "' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
                     <h1> Lighthouse Global Missions</h1>
-                    <p>Ministry Updates</p>
+                   
                 </div>
                 <div class='content'>
                     {$content}
