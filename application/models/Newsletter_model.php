@@ -486,16 +486,66 @@ class Newsletter_model extends CI_Model
     }
 
     // Email history methods
-    public function get_email_history($limit = 100, $offset = 0)
+    public function get_email_history($filters = [], $limit = 500, $offset = 0)
     {
+        if (is_numeric($filters)) {
+            $limit = $filters;
+            $filters = [];
+        }
+
         $this->db->select('eh.*, ns.first_name, ns.last_name, n.subject as newsletter_subject');
         $this->db->from('email_history eh');
         $this->db->join('newsletter_subscribers ns', 'eh.subscriber_id = ns.id', 'left');
         $this->db->join('newsletters n', 'eh.newsletter_id = n.id', 'left');
-        $this->db->order_by('eh.created_at', 'DESC');
-        $this->db->limit($limit, $offset);
+
+        if (!empty($filters['search'])) {
+            $this->db->group_start();
+            $this->db->like('eh.recipient_email', $filters['search']);
+            $this->db->or_like('eh.recipient_name', $filters['search']);
+            $this->db->or_like('eh.subject', $filters['search']);
+            $this->db->or_like('n.subject', $filters['search']);
+            $this->db->group_end();
+        }
+
+        if (!empty($filters['status'])) {
+            $this->db->where('eh.status', $filters['status']);
+        }
+
+        if (!empty($filters['date_from'])) {
+            $this->db->where('eh.created_at >=', $filters['date_from'] . ' 00:00:00');
+        }
+
+        if (!empty($filters['date_to'])) {
+            $this->db->where('eh.created_at <=', $filters['date_to'] . ' 23:59:59');
+        }
+
+        $this->db->order_by('eh.id', 'DESC');
+        if ($limit) {
+            $this->db->limit($limit, $offset);
+        }
 
         return $this->db->get()->result();
+    }
+
+    public function get_email_history_by_id($id)
+    {
+        return $this->db->get_where('email_history', ['id' => $id])->row();
+    }
+
+    public function delete_email_log($id)
+    {
+        return $this->db->delete('email_history', ['id' => $id]);
+    }
+
+    public function clear_email_history()
+    {
+        return $this->db->empty_table('email_history');
+    }
+
+    public function update_email_history($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('email_history', $data);
     }
 
     public function log_email_history($subscriber_id, $recipient_email, $recipient_name, $subject, $email_type, $newsletter_id = null, $status = 'sent', $error_message = null)

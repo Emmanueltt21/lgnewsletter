@@ -103,7 +103,7 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable">
+                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                     <tr>
                                         <th>Newsletter</th>
@@ -115,17 +115,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if(!empty($email_history)): ?>
-                                        <?php foreach($email_history as $email): ?>
+                                    <?php 
+                                        $history_list = !empty($email_history) ? $email_history : (!empty($emails) ? $emails : []);
+                                    ?>
+                                    <?php if(!empty($history_list)): ?>
+                                        <?php foreach($history_list as $email): ?>
                                             <tr>
                                                 <td>
-                                                    <strong><?php echo htmlspecialchars($email->newsletter_subject); ?></strong>
-                                                    <br>
-                                                    <small class="text-muted">ID: <?php echo $email->newsletter_id; ?></small>
+                                                    <strong><?php echo htmlspecialchars(!empty($email->newsletter_subject) ? $email->newsletter_subject : (!empty($email->subject) ? $email->subject : 'Newsletter')); ?></strong>
+                                                    <?php if(!empty($email->newsletter_id)): ?>
+                                                        <br>
+                                                        <small class="text-muted">Newsletter ID: <?php echo $email->newsletter_id; ?></small>
+                                                    <?php endif; ?>
                                                 </td>
                                                 <td>
                                                     <?php echo htmlspecialchars($email->recipient_email); ?>
-                                                    <?php if($email->recipient_name): ?>
+                                                    <?php if(!empty($email->recipient_name)): ?>
                                                         <br>
                                                         <small class="text-muted"><?php echo htmlspecialchars($email->recipient_name); ?></small>
                                                     <?php endif; ?>
@@ -141,9 +146,11 @@
                                                         <span class="label label-default"><?php echo ucfirst($email->status); ?></span>
                                                     <?php endif; ?>
                                                 </td>
-                                                <td>
+                                                <td data-order="<?php echo $email->sent_at ? strtotime($email->sent_at) : ($email->created_at ? strtotime($email->created_at) : 0); ?>">
                                                     <?php if($email->sent_at): ?>
                                                         <?php echo date('M j, Y g:i A', strtotime($email->sent_at)); ?>
+                                                    <?php elseif($email->created_at): ?>
+                                                        <?php echo date('M j, Y g:i A', strtotime($email->created_at)); ?>
                                                     <?php else: ?>
                                                         <span class="text-muted">Not sent</span>
                                                     <?php endif; ?>
@@ -168,9 +175,9 @@
                                                             </a>
                                                         <?php endif; ?>
                                                         <a href="<?php echo base_url('newsletter/delete_email_log/' . $email->id); ?>" 
-                                                           class="btn btn-xs btn-danger waves-effect" 
-                                                           title="Delete Log"
-                                                           onclick="return confirm('Are you sure you want to delete this log entry?')">
+                                                               class="btn btn-xs btn-danger waves-effect" 
+                                                               title="Delete Log"
+                                                               onclick="return confirm('Are you sure you want to delete this log entry?')">
                                                             <i class="material-icons">delete</i>
                                                         </a>
                                                     </div>

@@ -105,26 +105,33 @@
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <input type="radio" id="all_subscribers" name="recipient_type" value="all" 
-                                                               <?php echo (!isset($newsletter) || $newsletter->recipient_type == 'all') ? 'checked' : ''; ?> class="with-gap">
+                                                               <?php echo (!isset($selected_recipient_type) || $selected_recipient_type === 'all') ? 'checked' : ''; ?> class="with-gap">
                                                         <label for="all_subscribers">Send to All Confirmed Subscribers</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <input type="radio" id="test_email" name="recipient_type" value="test" 
-                                                               <?php echo (isset($newsletter) && $newsletter->recipient_type == 'test') ? 'checked' : ''; ?> class="with-gap">
+                                                               <?php echo (isset($selected_recipient_type) && $selected_recipient_type === 'test') ? 'checked' : ''; ?> class="with-gap">
                                                         <label for="test_email">Send Test Email</label>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row" id="test_email_field" style="display: none;">
+                                            <div class="row" id="test_email_field" style="<?php echo (isset($selected_recipient_type) && $selected_recipient_type === 'test') ? 'display: block;' : 'display: none;'; ?> margin-top: 15px;">
                                                 <div class="col-sm-12">
-                                                    <div class="form-group form-float">
+                                                    <label for="test_email_address" style="font-weight: 600; color: #444; margin-bottom: 5px; display: block;">
+                                                        Test Email Address <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="form-group">
                                                         <div class="form-line">
                                                             <input type="email" id="test_email_address" name="test_email_address" class="form-control" 
-                                                                   value="<?php echo isset($newsletter) ? htmlspecialchars($newsletter->test_email_address) : ''; ?>">
-                                                            <label class="form-label">Test Email Address</label>
+                                                                   placeholder="Enter email to receive test message (e.g. name@domain.com)"
+                                                                   value="<?php echo isset($test_email_address) ? htmlspecialchars($test_email_address) : ''; ?>">
                                                         </div>
+                                                        <small class="text-muted" style="display: block; margin-top: 5px;">
+                                                            <i class="material-icons" style="font-size: 14px; vertical-align: middle;">info</i>
+                                                            The newsletter will only be sent to this email address for preview testing. It will NOT be sent to subscribers.
+                                                        </small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -141,7 +148,8 @@
                                     </button>
                                     <?php if(!isset($newsletter) || $newsletter->status != 'sent'): ?>
                                         <button type="submit" name="action" value="send" class="btn btn-success waves-effect" 
-                                                onclick="return confirm('Are you sure you want to send this newsletter?')">
+                                                id="send_btn"
+                                                onclick="return confirmSendNewsletter()">
                                             <i class="material-icons">send</i>
                                             SEND NOW
                                         </button>
@@ -161,23 +169,67 @@
 </section>
 
 <script>
-    // Recipient type handling functionality preserved below
-
-    // Handle recipient type change
-    $('input[name="recipient_type"]').change(function() {
-        if ($(this).val() === 'test') {
-            $('#test_email_field').show();
-            $('#test_email_address').attr('required', true);
-        } else {
-            $('#test_email_field').hide();
-            $('#test_email_address').attr('required', false);
+function confirmSendNewsletter() {
+    var testRadio = document.getElementById('test_email');
+    if (testRadio && testRadio.checked) {
+        var testInput = document.getElementById('test_email_address');
+        var email = testInput ? testInput.value.trim() : '';
+        if (!email) {
+            alert('Please enter a test email address.');
+            if (testInput) testInput.focus();
+            return false;
         }
-    });
-
-    // Initialize on page load
-    if ($('input[name="recipient_type"]:checked').val() === 'test') {
-        $('#test_email_field').show();
-        $('#test_email_address').attr('required', true);
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            alert('Please enter a valid test email address.');
+            if (testInput) testInput.focus();
+            return false;
+        }
+        return confirm('Send test newsletter to ' + email + '?');
     }
-});
+    return confirm('Are you sure you want to send this newsletter to ALL confirmed subscribers?');
+}
+
+(function() {
+    function setupRecipientToggle() {
+        var testRadio = document.getElementById('test_email');
+        var allRadio = document.getElementById('all_subscribers');
+        var testField = document.getElementById('test_email_field');
+        var testInput = document.getElementById('test_email_address');
+
+        function updateState() {
+            if (!testRadio || !testField) return;
+            if (testRadio.checked) {
+                testField.style.display = 'block';
+                if (testInput) testInput.setAttribute('required', 'required');
+            } else {
+                testField.style.display = 'none';
+                if (testInput) testInput.removeAttribute('required');
+            }
+        }
+
+        if (testRadio) {
+            testRadio.addEventListener('change', updateState);
+            testRadio.addEventListener('click', updateState);
+        }
+        if (allRadio) {
+            allRadio.addEventListener('change', updateState);
+            allRadio.addEventListener('click', updateState);
+        }
+
+        var testLabel = document.querySelector('label[for="test_email"]');
+        var allLabel = document.querySelector('label[for="all_subscribers"]');
+        if (testLabel) testLabel.addEventListener('click', function() { setTimeout(updateState, 50); });
+        if (allLabel) allLabel.addEventListener('click', function() { setTimeout(updateState, 50); });
+
+        updateState();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupRecipientToggle);
+    } else {
+        setupRecipientToggle();
+    }
+    window.addEventListener('load', setupRecipientToggle);
+})();
 </script>

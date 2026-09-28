@@ -37,9 +37,12 @@ class Newsletter extends BaseController
         $data['title'] = $id ? 'Edit Newsletter' : 'Compose Newsletter';
         $data['newsletter'] = $id ? $this->Newsletter_model->get_newsletter_by_id($id) : null;
         $data['settings'] = $this->Newsletter_model->get_email_settings();
+        $data['test_email_address'] = $this->session->flashdata('test_email_address') ?: $this->session->userdata('email');
+        $data['selected_recipient_type'] = $this->session->flashdata('recipient_type') ?: 'all';
 
         if ($this->input->post()) {
             $this->process_newsletter_form($id);
+            return;
         }
 
         // Render using standard views to avoid loader method diagnostics
@@ -54,6 +57,8 @@ class Newsletter extends BaseController
         $subject = $this->input->post('subject');
         $content = $this->input->post('content');
         $action = $this->input->post('action');
+        $recipient_type = $this->input->post('recipient_type');
+        $test_email_address = trim($this->input->post('test_email_address') ?? '');
 
         // Resolve created_by to a valid admin_users.id (or NULL if unknown)
         $sessionUser = $this->session->userdata('userId');
@@ -82,7 +87,7 @@ class Newsletter extends BaseController
             'content' => $content,
             'sender_name' => $this->input->post('sender_name'),
             'sender_email' => $this->input->post('sender_email'),
-            'status' => ($action === 'send') ? 'sent' : 'draft',
+            'status' => 'draft',
             'created_by' => $createdBy
         ];
 
@@ -96,13 +101,64 @@ class Newsletter extends BaseController
         }
 
         if ($action === 'send') {
-            $this->send($newsletter_id);
-            return;
+            if ($recipient_type === 'test') {
+                if (empty($test_email_address) || !filter_var($test_email_address, FILTER_VALIDATE_EMAIL)) {
+                    $this->session->set_flashdata('error', 'Please enter a valid email address for the test email.');
+                    $this->session->set_flashdata('recipient_type', 'test');
+                    redirect('newsletter/compose/' . $newsletter_id);
+                    return;
+                }
+                $this->send_test($newsletter_id, $test_email_address);
+                return;
+            } else {
+                $this->send($newsletter_id);
+                return;
+            }
         }
 
         $message = $id ? 'Newsletter updated successfully' : 'Newsletter created successfully';
         $this->session->set_flashdata('success', $message);
         redirect('newsletter/index');
+    }
+
+    // Send test email
+    public function send_test($id, $test_email = null)
+    {
+        if (!$test_email) {
+            $test_email = trim($this->input->post('test_email_address') ?? '');
+        }
+
+        if (empty($test_email) || !filter_var($test_email, FILTER_VALIDATE_EMAIL)) {
+            $this->session->set_flashdata('error', 'Please provide a valid test email address.');
+            $this->session->set_flashdata('recipient_type', 'test');
+            redirect('newsletter/compose/' . $id);
+            return;
+        }
+
+        $newsletter = $this->Newsletter_model->get_newsletter_by_id($id);
+        if (!$newsletter) {
+            $this->session->set_flashdata('error', 'Newsletter not found.');
+            redirect('newsletter/index');
+            return;
+        }
+
+        $test_subscriber = new stdClass();
+        $test_subscriber->id = null;
+        $test_subscriber->first_name = 'Test';
+        $test_subscriber->last_name = 'Recipient';
+        $test_subscriber->email = $test_email;
+
+        $sent = $this->Newsletter_model->send_newsletter_email($newsletter, $test_subscriber);
+
+        if ($sent) {
+            $this->session->set_flashdata('success', 'Test newsletter successfully sent to ' . htmlspecialchars($test_email) . '. It is now recorded in Email History.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to send test email to ' . htmlspecialchars($test_email) . '. Please check SMTP settings or error log.');
+        }
+
+        $this->session->set_flashdata('test_email_address', $test_email);
+        $this->session->set_flashdata('recipient_type', 'test');
+        redirect('newsletter/compose/' . $id);
     }
 
     // Send newsletter
@@ -131,25 +187,127 @@ class Newsletter extends BaseController
         $this->Newsletter_model->update_newsletter($id, [
             'status' => 'sent',
             'sent_at' => date('Y-m-d H:i:s'),
-            'recipients_count' => $sent_count
+            'recipients_count' => $sent_count,
+            'sent_count' => $sent_count,
+            'failed_count' => $failed_count
         ]);
 
-        // Use the exact message specified
-        $message = 'Newsletter successfully sent';
+        $message = 'Newsletter successfully sent to ' . $sent_count . ' subscriber' . ($sent_count === 1 ? '' : 's') . '.';
         $this->session->set_flashdata('success', $message);
         redirect('newsletter/index');
     }
 
     // Email history
-    public function email_history()
+    public function email_history($action = null)
     {
+        if ($action === 'export') {
+            $history = $this->Newsletter_model->get_email_history([], 0);
+            $this->export_email_history_csv($history);
+            return;
+        }
+
         $data['title'] = 'Email History';
-        $data['emails'] = $this->Newsletter_model->get_email_history();
+        $filters = [
+            'search' => $this->input->get('search'),
+            'status' => $this->input->get('status'),
+            'date_from' => $this->input->get('date_from'),
+            'date_to' => $this->input->get('date_to')
+        ];
+        $history = $this->Newsletter_model->get_email_history($filters);
+        $data['email_history'] = $history;
+        $data['emails'] = $history;
 
         // Render using standard views to avoid loader method diagnostics
         $this->load->view('templates/header', $data);
         $this->load->view('newsletter/email_history', $data);
         $this->load->view('templates/footer', $data);
+    }
+
+    private function export_email_history_csv($history)
+    {
+        $filename = 'email_history_' . date('Y-m-d_H-i-s') . '.csv';
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Newsletter Subject', 'Newsletter ID', 'Recipient Email', 'Recipient Name', 'Status', 'Sent Date', 'Error Message']);
+
+        foreach ($history as $row) {
+            fputcsv($output, [
+                !empty($row->newsletter_subject) ? $row->newsletter_subject : $row->subject,
+                $row->newsletter_id ?? 'N/A',
+                $row->recipient_email,
+                $row->recipient_name,
+                ucfirst($row->status),
+                $row->sent_at ?? $row->created_at,
+                $row->error_message ?? ''
+            ]);
+        }
+
+        fclose($output);
+        exit;
+    }
+
+    // Delete email history log entry
+    public function delete_email_log($id)
+    {
+        if ($this->Newsletter_model->delete_email_log($id)) {
+            $this->session->set_flashdata('success', 'Email log entry deleted successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to delete email log entry.');
+        }
+        redirect('newsletter/email_history');
+    }
+
+    // Clear all email history
+    public function clear_email_history()
+    {
+        if ($this->Newsletter_model->clear_email_history()) {
+            $this->session->set_flashdata('success', 'All email history has been cleared.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to clear email history.');
+        }
+        redirect('newsletter/email_history');
+    }
+
+    // Resend email from history
+    public function resend_email($id)
+    {
+        $log = $this->Newsletter_model->get_email_history_by_id($id);
+        if (!$log) {
+            $this->session->set_flashdata('error', 'Email log entry not found.');
+            redirect('newsletter/email_history');
+            return;
+        }
+
+        if ($log->newsletter_id) {
+            $newsletter = $this->Newsletter_model->get_newsletter_by_id($log->newsletter_id);
+            if ($newsletter) {
+                $recipient = new stdClass();
+                $recipient->id = $log->subscriber_id;
+                $recipient->email = $log->recipient_email;
+                $recipient->first_name = $log->recipient_name ? explode(' ', $log->recipient_name)[0] : 'Valued';
+                $recipient->last_name = '';
+
+                $sent = $this->Newsletter_model->send_newsletter_email($newsletter, $recipient);
+                if ($sent) {
+                    $this->Newsletter_model->update_email_history($id, [
+                        'status' => 'sent',
+                        'sent_at' => date('Y-m-d H:i:s'),
+                        'error_message' => null
+                    ]);
+                    $this->session->set_flashdata('success', 'Email successfully resent to ' . htmlspecialchars($log->recipient_email));
+                } else {
+                    $this->session->set_flashdata('error', 'Failed to resend email to ' . htmlspecialchars($log->recipient_email));
+                }
+                redirect('newsletter/email_history');
+                return;
+            }
+        }
+
+        $this->session->set_flashdata('error', 'Associated newsletter could not be found to resend.');
+        redirect('newsletter/email_history');
     }
 
     // Alias for email_history (backward compatibility)
