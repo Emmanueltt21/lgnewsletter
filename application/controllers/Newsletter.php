@@ -88,7 +88,6 @@ class Newsletter extends BaseController
 
         if ($id) {
             // Update existing newsletter
-            $newsletter_data['updated_at'] = date('Y-m-d H:i:s');
             $this->Newsletter_model->update_newsletter($id, $newsletter_data);
             $newsletter_id = $id;
         } else {

@@ -119,8 +119,8 @@
                                                     <?php endif; ?>
                                                 </td>
                                                 <td><?php echo $newsletter->recipients_count ?? 0; ?></td>
-                                                <td><?php echo date('M j, Y g:i A', strtotime($newsletter->created_at)); ?></td>
-                                                <td>
+                                                <td data-order="<?php echo strtotime($newsletter->created_at); ?>"><?php echo date('M j, Y g:i A', strtotime($newsletter->created_at)); ?></td>
+                                                <td data-order="<?php echo $newsletter->sent_at ? strtotime($newsletter->sent_at) : 0; ?>">
                                                     <?php if($newsletter->sent_at): ?>
                                                         <?php echo date('M j, Y g:i A', strtotime($newsletter->sent_at)); ?>
                                                     <?php else: ?>

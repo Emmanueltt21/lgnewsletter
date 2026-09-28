@@ -231,7 +231,7 @@ class Newsletter_model extends CI_Model
         $this->db->select('n.*, au.username as created_by_username');
         $this->db->from('newsletters n');
         $this->db->join('admin_users au', 'n.created_by = au.id', 'left');
-        $this->db->order_by('n.created_at', 'DESC');
+        $this->db->order_by('n.id', 'DESC');
 
         if ($limit) {
             $this->db->limit($limit, $offset);
