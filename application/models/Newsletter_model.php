@@ -638,7 +638,7 @@ class Newsletter_model extends CI_Model
             <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: linear-gradient(135deg, #1da2f0 0%, #374151  100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                .header { background: linear-gradient(135deg, #1da2f0 0%, #203550  100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
                 .content { background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; }
                 .signature { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
             </style>
@@ -786,7 +786,7 @@ class Newsletter_model extends CI_Model
             <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: linear-gradient(135deg, #1f2937 0%, #374151 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                .header { background: linear-gradient(135deg, #1da2f0 0%, #203550 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
                 .content { background: #f8fafc; padding: 30px; border-radius: 0 0 10px 10px; }
                 .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
                 .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
