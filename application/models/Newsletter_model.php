@@ -618,15 +618,18 @@ class Newsletter_model extends CI_Model
         $site_url = isset($settings['site_url']) ? $settings['site_url'] : null;
 
         // Wrap in email template
-        $email_template = $this->get_newsletter_email_template($content . $unsubscribe_link, $settings['email_signature'], $logo_cid, $site_url);
+        $email_template = $this->get_newsletter_email_template($content . $unsubscribe_link, $settings['email_signature'], $logo_cid, $site_url, $unsubscribe_url);
 
         return $email_template;
     }
 
-    private function get_newsletter_email_template($content, $signature, $logo_cid = null, $site_url = null)
+    private function get_newsletter_email_template($content, $signature, $logo_cid = null, $site_url = null, $unsubscribe_url = null)
     {
         $base = $site_url ? rtrim($site_url, '/') . '/' : base_url();
         $logo_src = 'https://newsletter.lighthouseglobalmissions.org/assets/images/newsletter_logo_90.png';
+        if (empty($unsubscribe_url)) {
+            $unsubscribe_url = $base . "unsubscribe.php";
+        }
 
         return "
         <!DOCTYPE html>
@@ -648,6 +651,8 @@ class Newsletter_model extends CI_Model
                 <div class='header'>
                     <img src='" . $logo_src . "' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
                     <h1> Lighthouse Global Missions</h1>
+                    
+                    <p> Taking Christ’s light to the nations </p>
                    
                 </div>
                 <div class='content'>
@@ -733,7 +738,7 @@ class Newsletter_model extends CI_Model
                                </p>
               
                                <p style='margin:0 0 25px 0; font-size:13px; color:#cdd6e0;'>
-                                 You are subscribed to LG Missions newsletter |  Unsubscribe
+                                 You are subscribed to LG Missions newsletter | <a href='{$unsubscribe_url}' style='color:#cdd6e0; text-decoration:underline;'>Unsubscribe</a>
                                </p>
               
                                <p style='margin:0;'>
