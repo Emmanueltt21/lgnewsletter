@@ -609,16 +609,18 @@ class Newsletter_model extends CI_Model
         $content = str_replace('[LAST_NAME]', $subscriber->last_name, $content);
         $content = str_replace('[EMAIL]', $subscriber->email, $content);
 
-        // Add unsubscribe link
+        // Unsubscribe link is handled in the footer; body link commented out
         $unsubscribe_url = base_url() . "unsubscribe.php?email=" . urlencode($subscriber->email);
+        /*
         $unsubscribe_link = "<p style='text-align: center; margin-top: 30px; font-size: 12px; color: #666;'>";
         $unsubscribe_link .= "If you no longer wish to receive these emails, you can <a href='{$unsubscribe_url}'>unsubscribe here</a>.";
         $unsubscribe_link .= "</p>";
+        */
 
         $site_url = isset($settings['site_url']) ? $settings['site_url'] : null;
 
         // Wrap in email template
-        $email_template = $this->get_newsletter_email_template($content . $unsubscribe_link, $settings['email_signature'], $logo_cid, $site_url, $unsubscribe_url);
+        $email_template = $this->get_newsletter_email_template($content, $settings['email_signature'], $logo_cid, $site_url, $unsubscribe_url);
 
         return $email_template;
     }
