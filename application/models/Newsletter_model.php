@@ -366,21 +366,11 @@ class Newsletter_model extends CI_Model
 
             $this->email->initialize($config);
 
-            // Inline-embed logo for reliable rendering in email clients
-            $logo_cid = null;
-            $logo_path = FCPATH . 'assets/images/newsletter_logo_90.png';
-            if (is_file($logo_path)) {
-                $this->email->attach($logo_path, 'inline');
-                $logo_cid = $this->email->attachment_cid($logo_path);
-            } else {
-                error_log("Newsletter Logo not found at: " . $logo_path);
-            }
-
             // Prepare email content
-            $email_content = $this->prepare_newsletter_content($newsletter, $subscriber, $settings, $logo_cid);
+            $email_content = $this->prepare_newsletter_content($newsletter, $subscriber, $settings);
 
-            // Embed any local images found in the content
-            $this->embed_images_in_content($email_content);
+            // Normalize content images to public URLs
+            $this->normalize_images_in_content($email_content);
 
             // Fallback to settings sender details if newsletter lacks them
             $from_email = (!empty($newsletter->sender_email) && filter_var($newsletter->sender_email, FILTER_VALIDATE_EMAIL))
@@ -460,19 +450,11 @@ class Newsletter_model extends CI_Model
             // Email content
             $confirmation_url = base_url() . "confirm_subscription.php?token=" . $confirmation_token;
 
-            // Inline-embed logo for reliable rendering in email clients
-            $logo_cid = null;
-            $logo_path = FCPATH . 'assets/images/newsletter_logo_90.png';
-            if (is_file($logo_path)) {
-                $this->email->attach($logo_path, 'inline');
-                $logo_cid = $this->email->attachment_cid($logo_path);
-            }
-
             $message = $this->get_confirmation_email_template(
                 $subscriber->first_name,
                 $confirmation_url,
                 $settings['email_signature'],
-                $logo_cid,
+                null,
                 isset($settings['site_url']) ? $settings['site_url'] : null
             );
 
@@ -644,7 +626,7 @@ class Newsletter_model extends CI_Model
     private function get_newsletter_email_template($content, $signature, $logo_cid = null, $site_url = null)
     {
         $base = $site_url ? rtrim($site_url, '/') . '/' : base_url();
-        $logo_src = $logo_cid ? ('cid:' . $logo_cid) : ($base . "assets/images/newsletter_logo_90.png");
+        $logo_src = 'https://newsletter.lighthouseglobalmissions.org/assets/images/newsletter_logo_90.png';
 
         return "
         <!DOCTYPE html>
@@ -792,7 +774,7 @@ class Newsletter_model extends CI_Model
     private function get_confirmation_email_template($first_name, $confirmation_url, $signature, $logo_cid = null, $site_url = null)
     {
         $base = $site_url ? rtrim($site_url, '/') . '/' : base_url();
-        $logo_src = $logo_cid ? ('cid:' . $logo_cid) : ($base . "assets/images/newsletter_logo_90.png");
+        $logo_src = 'https://newsletter.lighthouseglobalmissions.org/assets/images/newsletter_logo_90.png';
 
         return "
         <!DOCTYPE html>
@@ -813,7 +795,7 @@ class Newsletter_model extends CI_Model
         <body>
             <div class='container'>
                 <div class='header'>
-                 <img src='" . base_url() . "assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
+                 <img src='" . $logo_src . "' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
                    
                     <h1> Lighthouse Global Missions</h1>
                     <p>Confirm Your Subscription</p>
@@ -840,62 +822,48 @@ class Newsletter_model extends CI_Model
         </html>";
     }
 
-    private function embed_images_in_content(&$content)
+    public function normalize_images_in_content(&$content)
     {
-        // Find all images
-        preg_match_all('/<img[^>]+src="([^">]+)"/i', $content, $matches);
+        // Find all images with either single or double quotes
+        preg_match_all('/<img[^>]+src=["\']([^"\']+)["\']/i', $content, $matches);
 
         if (empty($matches[1])) {
             return;
         }
 
         $unique_images = array_unique($matches[1]);
+        $public_base = 'https://newsletter.lighthouseglobalmissions.org/';
 
         foreach ($unique_images as $src) {
-            // Parse the URL path
-            $path = parse_url($src, PHP_URL_PATH);
-            if (!$path)
+            // If already pointing to the public newsletter URL, nothing to change
+            if (strpos($src, $public_base) === 0) {
                 continue;
+            }
 
-            // Clean path (remove query string if parse_url didn't catches it, though PHP_URL_PATH should)
+            // Parse URL path
+            $path = parse_url($src, PHP_URL_PATH);
+            if (!$path) {
+                continue;
+            }
             $path = urldecode($path);
 
-            // Potential file paths to check
-            $candidates = [];
-
-            // 1. Direct appended to FCPATH (e.g. /Applications/XAMPP.../uploads/foo.jpg)
-            // strip leading slash from path
-            $rel_path = ltrim($path, '/');
-            $candidates[] = FCPATH . $rel_path;
-
-            // 2. Handle subfolder installation (e.g. /lgnewsletter/uploads/foo.jpg)
-            // If path starts with a segment that matches the end of FCPATH, strip it.
-            // Simple heuristic: try removing the first directory segment
-            $parts = explode('/', $rel_path, 2);
-            if (count($parts) > 1) {
-                $candidates[] = FCPATH . $parts[1];
+            $clean_path = ltrim($path, '/');
+            // Remove local subfolder prefix if present (e.g. lgnewsletter/uploads/...)
+            if (strpos($clean_path, 'lgnewsletter/') === 0) {
+                $clean_path = substr($clean_path, strlen('lgnewsletter/'));
             }
 
-            $found_file = false;
-            foreach ($candidates as $file_path) {
-                if (file_exists($file_path)) {
-                    // Attach inline
-                    $this->email->attach($file_path, 'inline');
-                    $cid = $this->email->attachment_cid($file_path);
-
-                    if ($cid) {
-                        // Replace all occurrences of this src with cid
-                        $content = str_replace($src, 'cid:' . $cid, $content);
-                        $found_file = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!$found_file) {
-                error_log("Embed Image Failed: Could not find file for src: $src. Checked: " . implode(', ', $candidates));
+            // If the image points to uploads or assets, make it point to the public domain
+            if (strpos($clean_path, 'uploads/') === 0 || strpos($clean_path, 'assets/') === 0) {
+                $new_url = $public_base . $clean_path;
+                $content = str_replace($src, $new_url, $content);
             }
         }
+    }
+
+    private function embed_images_in_content(&$content)
+    {
+        $this->normalize_images_in_content($content);
     }
 }
 ?>

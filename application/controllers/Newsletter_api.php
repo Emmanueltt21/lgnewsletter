@@ -253,20 +253,12 @@ class Newsletter_api extends CI_Controller {
         ];
         $this->email->initialize($config);
 
-        // Inline-embed logo image
-        $logo_cid = null;
-        $logo_path = FCPATH . 'assets/images/newsletter_logo_90.png';
-        if (is_file($logo_path)) {
-            $this->email->attach($logo_path, 'inline');
-            $logo_cid = $this->email->attachment_cid($logo_path);
-        }
-
-        // Build message with CID logo or site URL fallback
+        // Build message with static logo URL
         $message = $this->_get_email_template(
             $first_name,
             $last_name,
             $confirmation_url,
-            $logo_cid,
+            null,
             isset($settings['site_url']) ? $settings['site_url'] : null
         );
 
@@ -311,7 +303,7 @@ class Newsletter_api extends CI_Controller {
 
     private function _get_email_template($first_name, $last_name, $confirmation_url, $logoCid = null, $siteUrl = null) {
         $base = $siteUrl ? rtrim($siteUrl, '/') . '/' : base_url();
-        $logoUrl = $logoCid ? ('cid:' . $logoCid) : ($base . 'assets/images/newsletter_logo_90.png');
+        $logoUrl = 'https://newsletter.lighthouseglobalmissions.org/assets/images/newsletter_logo_90.png';
         $year = date('Y');
         $first_name_esc = htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8');
         $last_name_esc = htmlspecialchars($last_name, ENT_QUOTES, 'UTF-8');

@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>404</title>
+    <?php $base = function_exists('base_url') ? base_url() : '/'; ?>
     <!-- Favicons -->
-    <link rel="icon" type="image/png" href="<?php echo asset_url('images/favicon/favicon-96x96.png'); ?>" sizes="96x96">
-    <link rel="icon" type="image/svg+xml" href="<?php echo asset_url('images/favicon/favicon.svg'); ?>">
-    <link rel="shortcut icon" href="<?php echo asset_url('images/favicon/favicon.ico'); ?>">
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo asset_url('images/favicon/apple-touch-icon.png'); ?>">
+    <link rel="icon" type="image/png" href="<?php echo function_exists('asset_url') ? asset_url('images/favicon/favicon-96x96.png') : $base . 'assets/images/favicon/favicon-96x96.png'; ?>" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="<?php echo function_exists('asset_url') ? asset_url('images/favicon/favicon.svg') : $base . 'assets/images/favicon/favicon.svg'; ?>">
+    <link rel="shortcut icon" href="<?php echo function_exists('asset_url') ? asset_url('images/favicon/favicon.ico') : $base . 'assets/images/favicon/favicon.ico'; ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo function_exists('asset_url') ? asset_url('images/favicon/apple-touch-icon.png') : $base . 'assets/images/favicon/apple-touch-icon.png'; ?>">
     <meta name="apple-mobile-web-app-title" content="Lgmissions">
-    <link rel="manifest" href="<?php echo asset_url('images/favicon/site.webmanifest'); ?>">
+    <link rel="manifest" href="<?php echo function_exists('asset_url') ? asset_url('images/favicon/site.webmanifest') : $base . 'assets/images/favicon/site.webmanifest'; ?>">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">

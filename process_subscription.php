@@ -161,20 +161,12 @@ function sendConfirmationEmail($email, $first_name, $confirmation_token) {
             : rtrim(base_url(), '/') . '/';
         $confirmation_url = $base . "confirm_subscription.php?token=" . $confirmation_token;
 
-        // Inline-embed logo image
-        $logoCid = null;
-        $logoPath = FCPATH . 'assets/images/newsletter_logo_90.png';
-        if (is_file($logoPath)) {
-            $CI->email->attach($logoPath, 'inline');
-            $logoCid = $CI->email->attachment_cid($logoPath);
-        }
-        
         $subject = $settings['confirmation_subject'];
         $message = getConfirmationEmailTemplate(
             $first_name,
             $confirmation_url,
             $settings['email_signature'],
-            $logoCid,
+            null,
             isset($settings['site_url']) ? $settings['site_url'] : null
         );
         
@@ -302,7 +294,7 @@ function logEmailHistory($subscriber_id, $recipient_email, $recipient_name, $sub
 
 function getConfirmationEmailTemplate($first_name, $confirmation_url, $signature, $logoCid = null, $siteUrl = null) {
     $base = $siteUrl ? rtrim($siteUrl, '/') . '/' : base_url();
-    $logoSrc = $logoCid ? ('cid:' . $logoCid) : ($base . "assets/images/newsletter_logo_90.png");
+    $logoSrc = 'https://newsletter.lighthouseglobalmissions.org/assets/images/newsletter_logo_90.png';
 
     return "
     <!DOCTYPE html>
@@ -369,7 +361,7 @@ function getWelcomeEmailTemplate($first_name, $signature) {
     <body>
         <div class='container'>
             <div class='header'>
-                <img src='" . base_url() . "assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
+                <img src='https://newsletter.lighthouseglobalmissions.org/assets/images/newsletter_logo_90.png' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
                 <h1> Welcome to Lighthouse Global Missions!</h1>
                 <p>You're now part of our Lighthouse Pillars community</p>
             </div>
