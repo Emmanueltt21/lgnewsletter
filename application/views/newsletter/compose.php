@@ -88,7 +88,13 @@
                             <div class="row clearfix">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label for="content">Newsletter Content</label>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                            <label for="content" style="margin: 0; font-size: 14px; font-weight: 600;">Newsletter Content</label>
+                                            <button type="button" class="btn btn-xs btn-primary waves-effect" id="btn_sample_template" onclick="loadSampleTemplate()" style="padding: 4px 10px;">
+                                                <i class="material-icons" style="font-size: 14px; vertical-align: middle;">format_shapes</i>
+                                                <span>Insert Sample Template</span>
+                                            </button>
+                                        </div>
                                         <textarea id="content" name="content" class="form-control editor" rows="15"><?php echo isset($newsletter) ? htmlspecialchars($newsletter->content) : set_value('content'); ?></textarea>
                                     </div>
                                 </div>
@@ -232,4 +238,103 @@ function confirmSendNewsletter() {
     }
     window.addEventListener('load', setupRecipientToggle);
 })();
+
+function loadSampleTemplate() {
+    var templateHtml = '<!-- Hero Banner Image -->\n' +
+'<div style="text-align: center; margin-bottom: 25px;">\n' +
+'    <img src="https://newsletter.lighthouseglobalmissions.org/uploads/newsletter_images/b18e16a58ff386a4ac1339cb78e78c8c.png" alt="Ministry Banner" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: block; margin: 0 auto;" />\n' +
+'</div>\n\n' +
+'<!-- Personal Greeting -->\n' +
+'<p style="font-size: 16px; color: #2c3e50; line-height: 1.6; margin-bottom: 16px;">\n' +
+'    Dear <strong>[FIRST_NAME]</strong>,\n' +
+'</p>\n\n' +
+'<!-- Intro Paragraph -->\n' +
+'<p style="font-size: 15px; color: #4a5568; line-height: 1.7; margin-bottom: 20px;">\n' +
+'    We pray this message finds you in good health and high spirits. As we step into this new season of ministry, we are thrilled to share what God has been doing across our communities, missions, and outreach programs. Your faithful partnership and prayers continue to bear fruit around the globe.\n' +
+'</p>\n\n' +
+'<!-- Highlight / Scripture Callout Box -->\n' +
+'<div style="background-color: #f0f7ff; border-left: 4px solid #1da2f0; padding: 18px 22px; border-radius: 6px; margin: 25px 0;">\n' +
+'    <p style="font-style: italic; color: #1a365d; font-size: 15px; line-height: 1.6; margin: 0 0 8px 0;">\n' +
+'        "For where your treasure is, there your heart will be also. Let your light shine before others, that they may see your good deeds and glorify your Father in heaven."\n' +
+'    </p>\n' +
+'    <p style="font-size: 13px; font-weight: bold; color: #2b6cb0; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">\n' +
+'        &mdash; Matthew 5:16 &amp; Luke 12:34\n' +
+'    </p>\n' +
+'</div>\n\n' +
+'<!-- Section Heading -->\n' +
+'<h2 style="font-size: 20px; color: #1a202c; border-bottom: 2px solid #edf2f7; padding-bottom: 8px; margin: 30px 0 16px 0;">\n' +
+'    Highlights of the Month\n' +
+'</h2>\n\n' +
+'<!-- Feature Section: Image & Text -->\n' +
+'<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">\n' +
+'    <tr>\n' +
+'        <td style="vertical-align: top; padding-right: 15px; width: 40%;">\n' +
+'            <img src="https://newsletter.lighthouseglobalmissions.org/uploads/newsletter_images/9cc53cce3c9fd0d61249cae1302c2c6a.png" alt="Community Outreach" style="width: 100%; max-width: 240px; height: auto; border-radius: 6px; display: block;" />\n' +
+'        </td>\n' +
+'        <td style="vertical-align: top; width: 60%;">\n' +
+'            <h3 style="font-size: 16px; color: #2d3748; margin: 0 0 8px 0;">Community Outreach &amp; Food Drive</h3>\n' +
+'            <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin: 0;">\n' +
+'                Thanks to your generosity, our team was able to provide food supplies and spiritual support to over 150 families this past week. Every meal shared was an opportunity to proclaim the unconditional love of Christ.\n' +
+'            </p>\n' +
+'        </td>\n' +
+'    </tr>\n' +
+'</table>\n\n' +
+'<!-- Key Bullet Points / Accomplishments -->\n' +
+'<div style="background-color: #fafbfc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 25px;">\n' +
+'    <h3 style="font-size: 16px; color: #2d3748; margin: 0 0 12px 0;">Key Ministry Updates</h3>\n' +
+'    <ul style="margin: 0; padding-left: 20px; color: #4a5568; font-size: 14px; line-height: 1.8;">\n' +
+'        <li><strong>Youth Mentorship Program:</strong> Over 40 youth enrolled in our weekly discipleship classes.</li>\n' +
+'        <li><strong>Global Missions Expansion:</strong> New mission stations established in remote rural centers.</li>\n' +
+'        <li><strong>Medical Outreach Week:</strong> Free health screenings scheduled for the upcoming weekend.</li>\n' +
+'    </ul>\n' +
+'</div>\n\n' +
+'<!-- Announcement / Event Banner Box -->\n' +
+'<div style="background: linear-gradient(135deg, #1da2f0 0%, #203550 100%); color: #ffffff; padding: 24px; border-radius: 8px; text-align: center; margin: 30px 0;">\n' +
+'    <h3 style="font-size: 18px; color: #ffffff; margin: 0 0 10px 0; font-weight: bold;">\n' +
+'        Upcoming Annual Thanksgiving &amp; Missions Conference\n' +
+'    </h3>\n' +
+'    <p style="font-size: 14px; color: #e2e8f0; line-height: 1.5; margin: 0 0 18px 0;">\n' +
+'        Join us in person or online via livestream as we gather to celebrate God\'s faithfulness.\n' +
+'    </p>\n' +
+'    <a href="https://lighthouseglobalmissions.org" target="_blank" style="background-color: #ffffff; color: #1da2f0; padding: 12px 28px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 14px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">\n' +
+'        RSVP / Learn More\n' +
+'    </a>\n' +
+'</div>\n\n' +
+'<!-- Closing & Sign-off -->\n' +
+'<p style="font-size: 15px; color: #4a5568; line-height: 1.6; margin-top: 25px;">\n' +
+'    Thank you for standing with us as a vital pillar in God\'s kingdom work. Together, we continue to shine the light of the gospel far and wide.\n' +
+'</p>\n' +
+'<p style="font-size: 15px; color: #2d3748; margin-top: 15px; line-height: 1.5;">\n' +
+'    Warm regards in Christ,<br>\n' +
+'    <strong>The Lighthouse Global Missions Team</strong>\n' +
+'</p>';
+
+    var subjectInput = document.getElementById('subject');
+    if (subjectInput && (!subjectInput.value || subjectInput.value.trim() === '')) {
+        subjectInput.value = 'A New Season of Faith & Ministry Highlights';
+        if (subjectInput.parentElement) {
+            subjectInput.parentElement.classList.add('focused');
+        }
+    }
+
+    if (typeof tinymce !== 'undefined' && tinymce.get('content')) {
+        var current = tinymce.get('content').getContent();
+        if (current && current.trim().length > 0) {
+            if (!confirm('This will replace the current content in the editor with the sample template. Do you want to continue?')) {
+                return;
+            }
+        }
+        tinymce.get('content').setContent(templateHtml);
+    } else {
+        var textarea = document.getElementById('content');
+        if (textarea) {
+            if (textarea.value && textarea.value.trim().length > 0) {
+                if (!confirm('This will replace the current content in the editor with the sample template. Do you want to continue?')) {
+                    return;
+                }
+            }
+            textarea.value = templateHtml;
+        }
+    }
+}
 </script>
