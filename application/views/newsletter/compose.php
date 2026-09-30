@@ -240,11 +240,7 @@ function confirmSendNewsletter() {
 })();
 
 function loadSampleTemplate() {
-    var templateHtml = '<!-- Hero Banner Image -->\n' +
-'<div style="text-align: center; margin-bottom: 25px;">\n' +
-'    <img src="https://newsletter.lighthouseglobalmissions.org/uploads/newsletter_images/b18e16a58ff386a4ac1339cb78e78c8c.png" alt="Ministry Banner" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: block; margin: 0 auto;" />\n' +
-'</div>\n\n' +
-'<!-- Personal Greeting -->\n' +
+    var templateHtml = '<!-- Personal Greeting -->\n' +
 '<p style="font-size: 16px; color: #2c3e50; line-height: 1.6; margin-bottom: 16px;">\n' +
 '    Dear <strong>[FIRST_NAME]</strong>,\n' +
 '</p>\n\n' +
@@ -265,20 +261,13 @@ function loadSampleTemplate() {
 '<h2 style="font-size: 20px; color: #1a202c; border-bottom: 2px solid #edf2f7; padding-bottom: 8px; margin: 30px 0 16px 0;">\n' +
 '    Highlights of the Month\n' +
 '</h2>\n\n' +
-'<!-- Feature Section: Image & Text -->\n' +
-'<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">\n' +
-'    <tr>\n' +
-'        <td style="vertical-align: top; padding-right: 15px; width: 40%;">\n' +
-'            <img src="https://newsletter.lighthouseglobalmissions.org/uploads/newsletter_images/9cc53cce3c9fd0d61249cae1302c2c6a.png" alt="Community Outreach" style="width: 100%; max-width: 240px; height: auto; border-radius: 6px; display: block;" />\n' +
-'        </td>\n' +
-'        <td style="vertical-align: top; width: 60%;">\n' +
-'            <h3 style="font-size: 16px; color: #2d3748; margin: 0 0 8px 0;">Community Outreach &amp; Food Drive</h3>\n' +
-'            <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin: 0;">\n' +
-'                Thanks to your generosity, our team was able to provide food supplies and spiritual support to over 150 families this past week. Every meal shared was an opportunity to proclaim the unconditional love of Christ.\n' +
-'            </p>\n' +
-'        </td>\n' +
-'    </tr>\n' +
-'</table>\n\n' +
+'<!-- Feature Story Section -->\n' +
+'<div style="background-color: #ffffff; border: 1px solid #edf2f7; border-radius: 8px; padding: 20px; margin-bottom: 24px;">\n' +
+'    <h3 style="font-size: 17px; color: #2d3748; margin: 0 0 10px 0; font-weight: 600;">Community Outreach &amp; Food Drive</h3>\n' +
+'    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin: 0;">\n' +
+'        Thanks to your generosity, our team was able to provide essential food supplies and spiritual encouragement to over 150 families this past week. Every meal shared was a tangible opportunity to demonstrate the unconditional love of Christ in action.\n' +
+'    </p>\n' +
+'</div>\n\n' +
 '<!-- Key Bullet Points / Accomplishments -->\n' +
 '<div style="background-color: #fafbfc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 25px;">\n' +
 '    <h3 style="font-size: 16px; color: #2d3748; margin: 0 0 12px 0;">Key Ministry Updates</h3>\n' +
