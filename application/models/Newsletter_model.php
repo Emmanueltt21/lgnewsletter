@@ -971,7 +971,14 @@ class Newsletter_model extends CI_Model
                     return $tag_prefix . $quote . $src . $quote;
                 }
 
-                // Extract just the path portion
+                // Handle relative paths with ../ (e.g. ../../uploads/newsletter_images/file.jpg)
+                // Strip all leading ../ sequences and get the clean relative path
+                $stripped = preg_replace('#^(\.\./)+#', '', $src);
+                if (strpos($stripped, 'uploads/') === 0 || strpos($stripped, 'assets/') === 0) {
+                    return $tag_prefix . $quote . $public_base . '/' . $stripped . $quote;
+                }
+
+                // Extract just the path portion from full URLs
                 $parsed = parse_url($src);
                 $path   = isset($parsed['path']) ? urldecode($parsed['path']) : $src;
                 $path   = ltrim($path, '/');
@@ -981,9 +988,16 @@ class Newsletter_model extends CI_Model
                     $path = substr($path, strlen('lgnewsletter/'));
                 }
 
-                // Only rewrite upload/asset paths
-                if (strpos($path, 'uploads/') === 0 || strpos($path, 'assets/') === 0) {
-                    return $tag_prefix . $quote . $public_base . '/' . $path . $quote;
+                // Rewrite any path containing uploads/ or assets/
+                if (strpos($path, 'uploads/') !== false || strpos($path, 'assets/') !== false) {
+                    // Extract from 'uploads/' or 'assets/' onwards
+                    foreach (['uploads/', 'assets/'] as $segment) {
+                        $pos = strpos($path, $segment);
+                        if ($pos !== false) {
+                            $path = substr($path, $pos);
+                            return $tag_prefix . $quote . $public_base . '/' . $path . $quote;
+                        }
+                    }
                 }
 
                 // Anything else — leave untouched
