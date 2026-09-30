@@ -29,17 +29,22 @@ if (php_sapi_name() === 'cli' || !isset($_SERVER['HTTP_HOST'])) {
     // CLI mode (for command line operations)
     $config['base_url'] = 'http://localhost:8080/';
 } else {
-    // Determine protocol
-    $protocol = 'http://';
-    if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || 
-        (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
-        (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') ||
-        (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
-        $protocol = 'https://';
-    }
-    
     // Get the host
     $host = $_SERVER['HTTP_HOST'];
+    $is_local = (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false);
+
+    // Determine protocol: Remote/production domains must always use https:// to prevent image proxy 301 redirects
+    if (!$is_local) {
+        $protocol = 'https://';
+    } else {
+        $protocol = 'http://';
+        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || 
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+            (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') ||
+            (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
+            $protocol = 'https://';
+        }
+    }
     
     // Get the directory path
     $script_name = $_SERVER['SCRIPT_NAME'];

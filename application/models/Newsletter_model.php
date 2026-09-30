@@ -944,6 +944,15 @@ class Newsletter_model extends CI_Model
         // First convert any embedded base64 images into physical files with public URLs
         $this->convert_base64_images($content);
 
+        $public_base = 'https://newsletter.lighthouseglobalmissions.org/';
+
+        // Canonicalize domain and protocol variations to secure HTTPS
+        $content = str_replace('http://newsletter.lighthouseglobalmissions.org/', $public_base, $content);
+        $content = str_replace('http://lighthouseglobalmissions.org/', $public_base, $content);
+        $content = str_replace('https://lighthouseglobalmissions.org/', $public_base, $content);
+        $content = str_replace('http://www.lighthouseglobalmissions.org/', $public_base, $content);
+        $content = str_replace('https://www.lighthouseglobalmissions.org/', $public_base, $content);
+
         // Find all images with either single or double quotes
         preg_match_all('/<img[^>]+src=["\']([^"\']+)["\']/i', $content, $matches);
 
@@ -952,7 +961,6 @@ class Newsletter_model extends CI_Model
         }
 
         $unique_images = array_unique($matches[1]);
-        $public_base = 'https://newsletter.lighthouseglobalmissions.org/';
 
         foreach ($unique_images as $src) {
             // If already pointing to the public newsletter URL, nothing to change
