@@ -387,6 +387,10 @@ class Newsletter_model extends CI_Model
             // Normalize content images to public URLs
             $this->normalize_images_in_content($email_content);
 
+            // DEBUG: log final email content to check image URLs
+            $debug_file = FCPATH . 'uploads/email_debug.html';
+            file_put_contents($debug_file, $email_content);
+
             // Fallback to settings sender details if newsletter lacks them
             $from_email = (!empty($newsletter->sender_email) && filter_var($newsletter->sender_email, FILTER_VALIDATE_EMAIL))
                 ? $newsletter->sender_email
@@ -946,49 +950,47 @@ class Newsletter_model extends CI_Model
         // First convert any embedded base64 images into physical files with public URLs
         $this->convert_base64_images($content);
 
-        $public_base = 'https://newsletter.lighthouseglobalmissions.org/';
+        $public_base = 'https://newsletter.lighthouseglobalmissions.org';
 
-        // Canonicalize domain and protocol variations to secure HTTPS
-        $content = str_replace('http://newsletter.lighthouseglobalmissions.org/', $public_base, $content);
-        $content = str_replace('http://lighthouseglobalmissions.org/', $public_base, $content);
-        $content = str_replace('https://lighthouseglobalmissions.org/', $public_base, $content);
-        $content = str_replace('http://www.lighthouseglobalmissions.org/', $public_base, $content);
-        $content = str_replace('https://www.lighthouseglobalmissions.org/', $public_base, $content);
+        // Use a single regex pass to rewrite ALL img src attributes
+        $content = preg_replace_callback(
+            '/(<img\b[^>]*?\ssrc=)(["\'])(.*?)\2/is',
+            function ($m) use ($public_base) {
+                $tag_prefix = $m[1];
+                $quote      = $m[2];
+                $src        = trim($m[3]);
 
-        // Find all images with either single or double quotes
-        preg_match_all('/<img[^>]+src=["\']([^"\']+)["\']/i', $content, $matches);
+                // Already correct — keep it
+                if (strpos($src, $public_base . '/uploads/') === 0 ||
+                    strpos($src, $public_base . '/assets/') === 0) {
+                    return $tag_prefix . $quote . $src . $quote;
+                }
 
-        if (empty($matches[1])) {
-            return;
-        }
+                // data: URI — leave for convert_base64_images to handle
+                if (strpos($src, 'data:') === 0) {
+                    return $tag_prefix . $quote . $src . $quote;
+                }
 
-        $unique_images = array_unique($matches[1]);
+                // Extract just the path portion
+                $parsed = parse_url($src);
+                $path   = isset($parsed['path']) ? urldecode($parsed['path']) : $src;
+                $path   = ltrim($path, '/');
 
-        foreach ($unique_images as $src) {
-            // If already pointing to the public newsletter URL, nothing to change
-            if (strpos($src, $public_base) === 0) {
-                continue;
-            }
+                // Strip any sub-folder prefix (e.g. lgnewsletter/uploads/...)
+                if (strpos($path, 'lgnewsletter/') === 0) {
+                    $path = substr($path, strlen('lgnewsletter/'));
+                }
 
-            // Parse URL path
-            $path = parse_url($src, PHP_URL_PATH);
-            if (!$path) {
-                continue;
-            }
-            $path = urldecode($path);
+                // Only rewrite upload/asset paths
+                if (strpos($path, 'uploads/') === 0 || strpos($path, 'assets/') === 0) {
+                    return $tag_prefix . $quote . $public_base . '/' . $path . $quote;
+                }
 
-            $clean_path = ltrim($path, '/');
-            // Remove local subfolder prefix if present (e.g. lgnewsletter/uploads/...)
-            if (strpos($clean_path, 'lgnewsletter/') === 0) {
-                $clean_path = substr($clean_path, strlen('lgnewsletter/'));
-            }
-
-            // If the image points to uploads or assets, make it point to the public domain
-            if (strpos($clean_path, 'uploads/') === 0 || strpos($clean_path, 'assets/') === 0) {
-                $new_url = $public_base . $clean_path;
-                $content = str_replace($src, $new_url, $content);
-            }
-        }
+                // Anything else — leave untouched
+                return $tag_prefix . $quote . $src . $quote;
+            },
+            $content
+        );
     }
 
     private function embed_images_in_content(&$content)
