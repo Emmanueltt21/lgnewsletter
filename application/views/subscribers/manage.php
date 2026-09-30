@@ -4,51 +4,66 @@
             <h2>MANAGE SUBSCRIBERS</h2>
         </div>
 
+        <?php
+            $total_subscribers = isset($stats['total']) ? $stats['total'] : (isset($stats['all']) ? $stats['all'] : (isset($stats['total_subscribers']) ? $stats['total_subscribers'] : 0));
+            $confirmed_subscribers = isset($stats['confirmed']) ? $stats['confirmed'] : (isset($stats['confirmed_subscribers']) ? $stats['confirmed_subscribers'] : 0);
+            $pending_subscribers = isset($stats['pending']) ? $stats['pending'] : (isset($stats['pending_confirmations']) ? $stats['pending_confirmations'] : 0);
+            $unsubscribed_subscribers = isset($stats['unsubscribed']) ? $stats['unsubscribed'] : (isset($stats['unsubscribed_subscribers']) ? $stats['unsubscribed_subscribers'] : 0);
+        ?>
+
         <!-- Statistics Cards -->
         <div class="row clearfix">
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box bg-purple hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">people</i>
+                <a href="<?php echo base_url('subscribers'); ?>" style="display: block; text-decoration: none; color: inherit;">
+                    <div class="info-box bg-purple hover-expand-effect" style="cursor: pointer;">
+                        <div class="icon">
+                            <i class="material-icons">people</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Total Subscribers</div>
+                            <div class="number count-to" data-from="0" data-to="<?php echo $total_subscribers; ?>" data-speed="1000" data-fresh-interval="20"><?php echo $total_subscribers; ?></div>
+                        </div>
                     </div>
-                    <div class="content">
-                        <div class="text">Total Subscribers</div>
-                        <div class="number count-to" data-from="0" data-to="<?php echo isset($stats['total']) ? $stats['total'] : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($stats['total']) ? $stats['total'] : 0; ?></div>
-                    </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box bg-green hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">check_circle</i>
+                <a href="<?php echo base_url('subscribers?status=confirmed'); ?>" style="display: block; text-decoration: none; color: inherit;">
+                    <div class="info-box bg-green hover-expand-effect" style="cursor: pointer;">
+                        <div class="icon">
+                            <i class="material-icons">check_circle</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Confirmed</div>
+                            <div class="number count-to" data-from="0" data-to="<?php echo $confirmed_subscribers; ?>" data-speed="1000" data-fresh-interval="20"><?php echo $confirmed_subscribers; ?></div>
+                        </div>
                     </div>
-                    <div class="content">
-                        <div class="text">Confirmed</div>
-                        <div class="number count-to" data-from="0" data-to="<?php echo isset($stats['confirmed']) ? $stats['confirmed'] : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($stats['confirmed']) ? $stats['confirmed'] : 0; ?></div>
-                    </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box bg-orange hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">schedule</i>
+                <a href="<?php echo base_url('subscribers?status=pending'); ?>" style="display: block; text-decoration: none; color: inherit;">
+                    <div class="info-box bg-orange hover-expand-effect" style="cursor: pointer;">
+                        <div class="icon">
+                            <i class="material-icons">schedule</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Pending</div>
+                            <div class="number count-to" data-from="0" data-to="<?php echo $pending_subscribers; ?>" data-speed="1000" data-fresh-interval="20"><?php echo $pending_subscribers; ?></div>
+                        </div>
                     </div>
-                    <div class="content">
-                        <div class="text">Pending</div>
-                        <div class="number count-to" data-from="0" data-to="<?php echo isset($stats['pending']) ? $stats['pending'] : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($stats['pending']) ? $stats['pending'] : 0; ?></div>
-                    </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box bg-red hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">unsubscribe</i>
+                <a href="<?php echo base_url('subscribers?status=unsubscribed'); ?>" style="display: block; text-decoration: none; color: inherit;">
+                    <div class="info-box bg-red hover-expand-effect" style="cursor: pointer;">
+                        <div class="icon">
+                            <i class="material-icons">unsubscribe</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Unsubscribed</div>
+                            <div class="number count-to" data-from="0" data-to="<?php echo $unsubscribed_subscribers; ?>" data-speed="1000" data-fresh-interval="20"><?php echo $unsubscribed_subscribers; ?></div>
+                        </div>
                     </div>
-                    <div class="content">
-                        <div class="text">Unsubscribed</div>
-                        <div class="number count-to" data-from="0" data-to="<?php echo isset($stats['unsubscribed']) ? $stats['unsubscribed'] : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($stats['unsubscribed']) ? $stats['unsubscribed'] : 0; ?></div>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
 
@@ -72,7 +87,7 @@
                         </ul>
                     </div>
                     <div class="body">
-                        <form method="GET" action="<?php echo base_url('dashboard/subscribers'); ?>">
+                        <form method="GET" action="<?php echo base_url('subscribers'); ?>">
                             <div class="row clearfix">
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                     <div class="form-group">

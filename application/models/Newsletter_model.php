@@ -126,10 +126,23 @@ class Newsletter_model extends CI_Model
     {
         $stats = [];
 
-        $stats['all'] = $this->db->count_all('newsletter_subscribers');
-        $stats['confirmed'] = $this->db->where('status', 'confirmed')->count_all_results('newsletter_subscribers');
-        $stats['pending'] = $this->db->where('status', 'pending')->count_all_results('newsletter_subscribers');
-        $stats['unsubscribed'] = $this->db->where('status', 'unsubscribed')->count_all_results('newsletter_subscribers');
+        $total = $this->db->count_all('newsletter_subscribers');
+        $confirmed = $this->db->where('status', 'confirmed')->count_all_results('newsletter_subscribers');
+        $pending = $this->db->where('status', 'pending')->count_all_results('newsletter_subscribers');
+        $unsubscribed = $this->db->where('status', 'unsubscribed')->count_all_results('newsletter_subscribers');
+
+        $stats['total'] = $total;
+        $stats['all'] = $total;
+        $stats['total_subscribers'] = $total;
+
+        $stats['confirmed'] = $confirmed;
+        $stats['confirmed_subscribers'] = $confirmed;
+
+        $stats['pending'] = $pending;
+        $stats['pending_confirmations'] = $pending;
+
+        $stats['unsubscribed'] = $unsubscribed;
+        $stats['unsubscribed_subscribers'] = $unsubscribed;
 
         return $stats;
     }

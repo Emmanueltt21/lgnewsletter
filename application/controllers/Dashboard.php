@@ -47,7 +47,7 @@ class Dashboard extends BaseController {
       $date_range = $this->input->get('date_range') ?: 'all';
       
       // Get subscriber statistics
-      $data['stats'] = $this->Newsletter_model->get_dashboard_stats();
+      $data['stats'] = $this->Newsletter_model->get_subscriber_stats();
       
       // Get filtered subscribers
       $data['subscribers'] = $this->Newsletter_model->get_subscribers_by_filter($search, $status, $date_range);
