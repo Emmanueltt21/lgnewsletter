@@ -66,6 +66,9 @@ class Newsletter extends BaseController
         $recipient_type = $this->input->post('recipient_type');
         $test_email_address = trim($this->input->post('test_email_address') ?? '');
 
+        // Convert any pasted base64 data URIs into physical files and public URLs
+        $this->Newsletter_model->convert_base64_images($content);
+
         // Resolve created_by to a valid admin_users.id (or NULL if unknown)
         $sessionUser = $this->session->userdata('userId');
         $createdBy = null;
@@ -460,26 +463,43 @@ class Newsletter extends BaseController
         // Check if user is logged in
         if (!$this->session->userdata('isLoggedIn')) {
             header("HTTP/1.1 403 Forbidden");
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'You must be logged in to upload images.']);
             return;
         }
 
-        $config['upload_path'] = './uploads/newsletter_images/';
-        $config['allowed_types'] = 'gif|jpg|png|jpeg';
-        $config['max_size'] = 5120; // 5MB
+        $upload_dir = FCPATH . 'uploads/newsletter_images/';
+        if (!is_dir($upload_dir)) {
+            @mkdir($upload_dir, 0777, true);
+        }
+
+        $config['upload_path'] = $upload_dir;
+        $config['allowed_types'] = 'gif|jpg|png|jpeg|webp|bmp|GIF|JPG|PNG|JPEG|WEBP|BMP';
+        $config['max_size'] = 20480; // 20MB
         $config['encrypt_name'] = TRUE;
 
         $this->load->library('upload', $config);
 
+        header('Content-Type: application/json');
+
         if ($this->upload->do_upload('file')) {
             $data = $this->upload->data();
-            $file_url = base_url('uploads/newsletter_images/' . $data['file_name']);
+
+            $public_base = 'https://newsletter.lighthouseglobalmissions.org/';
+            if (!isset($_SERVER['HTTP_HOST']) || strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
+                $public_base = base_url();
+            }
+            $file_url = rtrim($public_base, '/') . '/uploads/newsletter_images/' . $data['file_name'];
 
             // Return JSON response for TinyMCE
             echo json_encode(['location' => $file_url]);
         } else {
-            // Return HTTP 500 error with message
-            header("HTTP/1.1 500 Server Error");
-            echo json_encode(['error' => $this->upload->display_errors('', '')]);
+            $err = $this->upload->display_errors('', '');
+            if (empty($err)) {
+                $err = 'Failed to upload image. Please check file format and size.';
+            }
+            http_response_code(400);
+            echo json_encode(['error' => $err, 'message' => $err]);
         }
     }
 

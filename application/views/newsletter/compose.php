@@ -88,12 +88,19 @@
                             <div class="row clearfix">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
                                             <label for="content" style="margin: 0; font-size: 14px; font-weight: 600;">Newsletter Content</label>
-                                            <button type="button" class="btn btn-xs btn-primary waves-effect" id="btn_sample_template" onclick="loadSampleTemplate()" style="padding: 4px 10px;">
-                                                <i class="material-icons" style="font-size: 14px; vertical-align: middle;">format_shapes</i>
-                                                <span>Insert Sample Template</span>
-                                            </button>
+                                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                                <button type="button" class="btn btn-xs btn-success waves-effect" id="btn_direct_upload_img" onclick="triggerDirectImageUpload()" style="padding: 4px 10px;">
+                                                    <i class="material-icons" style="font-size: 14px; vertical-align: middle;">add_photo_alternate</i>
+                                                    <span>Upload & Insert Image</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs btn-primary waves-effect" id="btn_sample_template" onclick="loadSampleTemplate()" style="padding: 4px 10px;">
+                                                    <i class="material-icons" style="font-size: 14px; vertical-align: middle;">format_shapes</i>
+                                                    <span>Insert Sample Template</span>
+                                                </button>
+                                            </div>
+                                            <input type="file" id="direct_image_file_input" accept="image/*" style="display: none;" onchange="handleDirectImageUpload(this)">
                                         </div>
                                         <textarea id="content" name="content" class="form-control editor" rows="15"><?php echo isset($newsletter) ? htmlspecialchars($newsletter->content) : set_value('content'); ?></textarea>
                                     </div>
@@ -325,5 +332,82 @@ function loadSampleTemplate() {
             textarea.value = templateHtml;
         }
     }
+}
+
+function triggerDirectImageUpload() {
+    var input = document.getElementById('direct_image_file_input');
+    if (input) {
+        input.value = '';
+        input.click();
+    }
+}
+
+function handleDirectImageUpload(input) {
+    if (!input || !input.files || input.files.length === 0) return;
+    var file = input.files[0];
+
+    var btn = document.getElementById('btn_direct_upload_img');
+    var originalHtml = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="material-icons" style="font-size: 14px; vertical-align: middle;">hourglass_empty</i> <span>Uploading...</span>';
+    }
+
+    var formData = new FormData();
+    formData.append('file', file);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?php echo base_url("newsletter/upload_image"); ?>');
+
+    xhr.onload = function() {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+        }
+
+        if (xhr.status === 200) {
+            var json;
+            try {
+                json = JSON.parse(xhr.responseText);
+            } catch(e) {
+                alert('Upload response error: ' + xhr.responseText);
+                return;
+            }
+
+            if (!json || typeof json.location !== 'string') {
+                alert('Upload error: ' + (json && (json.error || json.message) ? (json.error || json.message) : 'Invalid server response'));
+                return;
+            }
+
+            var safeTitle = file.name ? file.name.replace(/"/g, '&quot;') : 'Newsletter Image';
+            var imgTag = '<p style="text-align: center; margin: 20px 0;"><img src="' + json.location + '" alt="' + safeTitle + '" style="max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);" /></p><p></p>';
+
+            if (typeof tinymce !== 'undefined' && tinymce.get('content')) {
+                tinymce.get('content').insertContent(imgTag);
+            } else {
+                var textarea = document.getElementById('content');
+                if (textarea) {
+                    textarea.value += '\n' + imgTag + '\n';
+                }
+            }
+        } else {
+            var errMsg = 'HTTP Error ' + xhr.status;
+            try {
+                var errJson = JSON.parse(xhr.responseText);
+                if (errJson && (errJson.error || errJson.message)) errMsg = errJson.error || errJson.message;
+            } catch(e) {}
+            alert('Failed to upload image: ' + errMsg);
+        }
+    };
+
+    xhr.onerror = function() {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+        }
+        alert('Network error while uploading image. Please check your connection and try again.');
+    };
+
+    xhr.send(formData);
 }
 </script>

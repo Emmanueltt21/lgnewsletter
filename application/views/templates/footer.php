@@ -79,6 +79,46 @@
         images_upload_url: '<?php echo base_url("newsletter/upload_image"); ?>',
         automatic_uploads: true,
         file_picker_types: 'image',
+        images_upload_handler: function (blobInfo, success, failure) {
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = false;
+            xhr.open('POST', '<?php echo base_url("newsletter/upload_image"); ?>');
+
+            xhr.onload = function() {
+                if (xhr.status !== 200) {
+                    var errMsg = 'HTTP Error: ' + xhr.status;
+                    try {
+                        var json = JSON.parse(xhr.responseText);
+                        if (json && (json.error || json.message)) errMsg = json.error || json.message;
+                    } catch(e) {}
+                    failure(errMsg);
+                    return;
+                }
+
+                var json;
+                try {
+                    json = JSON.parse(xhr.responseText);
+                } catch(e) {
+                    failure('Invalid server response');
+                    return;
+                }
+
+                if (!json || typeof json.location !== 'string') {
+                    failure('Invalid upload location response');
+                    return;
+                }
+
+                success(json.location);
+            };
+
+            xhr.onerror = function() {
+                failure('Network error occurred during image upload.');
+            };
+
+            var formData = new FormData();
+            formData.append('file', blobInfo.blob(), blobInfo.filename());
+            xhr.send(formData);
+        },
         file_picker_callback: function(cb, value, meta) {
             var input = document.createElement('input');
             input.setAttribute('type', 'file');
@@ -86,13 +126,11 @@
 
             input.onchange = function() {
                 var file = this.files[0];
-                var reader = new FileReader();
+                if (!file) return;
 
-                // Create a FormData object to send the file
                 var formData = new FormData();
                 formData.append('file', file);
 
-                // Send the file to the server
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', '<?php echo base_url("newsletter/upload_image"); ?>');
                 
@@ -102,20 +140,28 @@
                         try {
                             json = JSON.parse(xhr.responseText);
                         } catch (e) {
-                            console.error('Invalid JSON: ' + xhr.responseText);
+                            alert('Upload error: ' + xhr.responseText);
                             return;
                         }
 
                         if (!json || typeof json.location != 'string') {
-                            console.error('Invalid JSON: ' + xhr.responseText);
+                            alert('Upload error: ' + (json && (json.error || json.message) ? (json.error || json.message) : 'Invalid server response'));
                             return;
                         }
 
-                        // Call the callback with the location of the uploaded file
-                        cb(json.location, { title: file.name });
+                        cb(json.location, { title: file.name, alt: file.name });
                     } else {
-                        console.error('HTTP Error: ' + xhr.status);
+                        var errMsg = 'HTTP Error: ' + xhr.status;
+                        try {
+                            var jsonErr = JSON.parse(xhr.responseText);
+                            if (jsonErr && (jsonErr.error || jsonErr.message)) errMsg = jsonErr.error || jsonErr.message;
+                        } catch (e) {}
+                        alert('Image upload failed: ' + errMsg);
                     }
+                };
+
+                xhr.onerror = function() {
+                    alert('Network error while uploading image. Please check connection and try again.');
                 };
 
                 xhr.send(formData);

@@ -892,8 +892,58 @@ class Newsletter_model extends CI_Model
         </html>";
     }
 
+    public function convert_base64_images(&$content)
+    {
+        if (empty($content) || strpos($content, 'data:image/') === false) {
+            return;
+        }
+
+        $upload_dir = FCPATH . 'uploads/newsletter_images/';
+        if (!is_dir($upload_dir)) {
+            @mkdir($upload_dir, 0777, true);
+        }
+
+        $public_base = 'https://newsletter.lighthouseglobalmissions.org/';
+        if (!isset($_SERVER['HTTP_HOST']) || strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
+            $public_base = base_url();
+        }
+
+        // Match all data:image base64 sources
+        if (preg_match_all('/src=["\'](data:image\/([a-zA-Z0-9\+\-\.]+);base64,([^"\']+)["\']/i', $content, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                $full_src = $match[1];
+                $mime_ext = strtolower($match[2]);
+                $base64_data = $match[3];
+
+                if ($mime_ext === 'jpeg') {
+                    $ext = 'jpg';
+                } elseif ($mime_ext === 'svg+xml') {
+                    $ext = 'svg';
+                } else {
+                    $ext = preg_replace('/[^a-z0-9]/', '', $mime_ext);
+                }
+
+                $image_data = base64_decode($base64_data);
+                if ($image_data !== false) {
+                    $filename = 'pasted_' . md5($image_data) . '.' . $ext;
+                    $filepath = $upload_dir . $filename;
+
+                    if (!file_exists($filepath)) {
+                        @file_put_contents($filepath, $image_data);
+                    }
+
+                    $public_url = rtrim($public_base, '/') . '/uploads/newsletter_images/' . $filename;
+                    $content = str_replace($full_src, $public_url, $content);
+                }
+            }
+        }
+    }
+
     public function normalize_images_in_content(&$content)
     {
+        // First convert any embedded base64 images into physical files with public URLs
+        $this->convert_base64_images($content);
+
         // Find all images with either single or double quotes
         preg_match_all('/<img[^>]+src=["\']([^"\']+)["\']/i', $content, $matches);
 
