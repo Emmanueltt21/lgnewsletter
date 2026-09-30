@@ -374,7 +374,9 @@ class Newsletter_model extends CI_Model
                 'smtp_crypto' => $settings['smtp_encryption'],
                 'mailtype' => 'html',
                 'charset' => 'utf-8',
-                'newline' => "\r\n"
+                'newline' => "\r\n",
+                'wordwrap' => false,   // Disable — wordwrap breaks long image URLs in HTML
+                'wrapchars' => 0
             ];
 
             $this->email->initialize($config);
