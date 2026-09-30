@@ -23,39 +23,40 @@ if (empty($token)) {
 try {
     // Initialize the newsletter wrapper
     $newsletterWrapper = new NewsletterWrapper();
-    
+
     // Confirm the subscription
     $result = $newsletterWrapper->confirmSubscription($token);
-    
+
     if (!$result['success']) {
         showErrorPage($result['message']);
         exit;
     }
-    
+
     // Get subscriber data
     $subscriber = $result['data'];
-    
+
     // Send welcome email
     if (sendWelcomeEmail($subscriber['email'], $subscriber['first_name'], $newsletterWrapper)) {
         // Log welcome email
         $newsletterWrapper->logEmailHistory(
-            $subscriber['subscriber_id'], 
-            $subscriber['email'], 
-            $subscriber['first_name'] . ' ' . $subscriber['last_name'], 
-            'Welcome to Lighthouse Global Missions!', 
+            $subscriber['subscriber_id'],
+            $subscriber['email'],
+            $subscriber['first_name'] . ' ' . $subscriber['last_name'],
+            'Welcome to Lighthouse Global Missions!',
             'welcome'
         );
     }
-    
+
     // Show success page
     showSuccessPage($subscriber['first_name']);
-    
+
 } catch (Exception $e) {
     error_log("Confirmation error: " . $e->getMessage());
     showErrorPage('An error occurred while confirming your subscription');
 }
 
-function sendWelcomeEmail($email, $first_name, $newsletterWrapper) {
+function sendWelcomeEmail($email, $first_name, $newsletterWrapper)
+{
     try {
         // Get email settings
         $settings = $newsletterWrapper->getEmailSettings();
@@ -79,7 +80,7 @@ function sendWelcomeEmail($email, $first_name, $newsletterWrapper) {
             $CI->email->initialize($config);
 
             $subject = $settings['welcome_subject'] ?? 'Welcome to Lighthouse Global Missions!';
-            $message = getWelcomeEmailTemplate($first_name, $settings['email_signature'] ?? 'Blessings, Pastor Simon Mungwa');
+            $message = getWelcomeEmailTemplate($first_name, $settings['email_signature'] ?? 'Blessings,  Simon Mungwa');
 
             $CI->email->from($settings['sender_email'] ?? 'pastorsimon@lgmissions.org', $settings['sender_name'] ?? 'Lighthouse Global Missions');
             $CI->email->to($email);
@@ -98,7 +99,7 @@ function sendWelcomeEmail($email, $first_name, $newsletterWrapper) {
 
         // Fallback to PHP mail() if CI Email library isn't available
         $subject = $settings['welcome_subject'] ?? 'Welcome to Lighthouse Global Missions!';
-        $message = getWelcomeEmailTemplate($first_name, $settings['email_signature'] ?? 'Blessings, Pastor Simon Mungwa');
+        $message = getWelcomeEmailTemplate($first_name, $settings['email_signature'] ?? 'Blessings,  Simon Mungwa');
 
         $headers = [
             'MIME-Version: 1.0',
@@ -120,7 +121,8 @@ function sendWelcomeEmail($email, $first_name, $newsletterWrapper) {
     }
 }
 
-function getWelcomeEmailTemplate($first_name, $signature) {
+function getWelcomeEmailTemplate($first_name, $signature)
+{
     return "
     <!DOCTYPE html>
     <html>
@@ -280,10 +282,12 @@ function getWelcomeEmailTemplate($first_name, $signature) {
     </html>";
 }
 
-function showSuccessPage($first_name) {
+function showSuccessPage($first_name)
+{
     ?>
     <!DOCTYPE html>
     <html lang="en">
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -331,12 +335,19 @@ function showSuccessPage($first_name) {
             }
 
             @keyframes bounce {
-                0%, 20%, 50%, 80%, 100% {
+
+                0%,
+                20%,
+                50%,
+                80%,
+                100% {
                     transform: translateY(0);
                 }
+
                 40% {
                     transform: translateY(-10px);
                 }
+
                 60% {
                     transform: translateY(-5px);
                 }
@@ -427,6 +438,7 @@ function showSuccessPage($first_name) {
             }
         </style>
     </head>
+
     <body>
         <div class="container">
             <div class="header">
@@ -439,7 +451,8 @@ function showSuccessPage($first_name) {
 
             <div class="content">
                 <h2>Thank you, <?php echo htmlspecialchars($first_name); ?>!</h2>
-                <p>Your subscription to Lighthouse Global Missions newsletter has been successfully confirmed. You are now part of our Lighthouse Pillars community!</p>
+                <p>Your subscription to Lighthouse Global Missions newsletter has been successfully confirmed. You are now
+                    part of our Lighthouse Pillars community!</p>
 
                 <div class="benefits">
                     <h3>What to expect:</h3>
@@ -454,7 +467,7 @@ function showSuccessPage($first_name) {
                 <p>A welcome email has been sent to your inbox with more details about our ministry and community.</p>
 
                 <p>God’s richest blessings</p>
-                <p>Pastor Simon Mungwa</p>
+                <p> Simon Mungwa</p>
 
                 <a href="https://www.lgmissions.org" class="cta-button">
                     <i class="fas fa-home"></i> Visit Our Website
@@ -466,14 +479,17 @@ function showSuccessPage($first_name) {
             </div>
         </div>
     </body>
+
     </html>
     <?php
 }
 
-function showErrorPage($message) {
+function showErrorPage($message)
+{
     ?>
     <!DOCTYPE html>
     <html lang="en">
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -561,6 +577,7 @@ function showErrorPage($message) {
             }
         </style>
     </head>
+
     <body>
         <div class="container">
             <div class="header">
@@ -587,6 +604,7 @@ function showErrorPage($message) {
             </div>
         </div>
     </body>
+
     </html>
     <?php
 }
