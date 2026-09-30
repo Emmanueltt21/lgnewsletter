@@ -31,6 +31,12 @@ class Newsletter extends BaseController
         $this->load->view('templates/footer', $data);
     }
 
+    // Alias for index
+    public function newsletters()
+    {
+        $this->index();
+    }
+
     // Compose newsletter
     public function compose($id = null)
     {

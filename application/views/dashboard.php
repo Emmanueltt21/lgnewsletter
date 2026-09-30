@@ -64,51 +64,59 @@
             
             <!-- Newsletter Statistics -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <div class="info-box bg-purple hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">email</i>
+                <a href="<?php echo base_url('subscribers'); ?>" style="display: block; text-decoration: none; color: inherit;">
+                    <div class="info-box bg-purple hover-expand-effect" style="cursor: pointer;">
+                        <div class="icon">
+                            <i class="material-icons">email</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Newsletter Subscribers</div>
+                            <div class="number count-to" data-from="0" data-to="<?php echo isset($newsletter_subscribers) ? $newsletter_subscribers : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($newsletter_subscribers) ? $newsletter_subscribers : 0; ?></div>
+                        </div>
                     </div>
-                    <div class="content">
-                        <div class="text">Newsletter Subscribers</div>
-                        <div class="number count-to" data-from="0" data-to="<?php echo isset($newsletter_subscribers) ? $newsletter_subscribers : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($newsletter_subscribers) ? $newsletter_subscribers : 0; ?></div>
-                    </div>
-                </div>
+                </a>
             </div>
             
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <div class="info-box bg-green hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">check_circle</i>
+                <a href="<?php echo base_url('subscribers?status=confirmed'); ?>" style="display: block; text-decoration: none; color: inherit;">
+                    <div class="info-box bg-green hover-expand-effect" style="cursor: pointer;">
+                        <div class="icon">
+                            <i class="material-icons">check_circle</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Confirmed Subscribers</div>
+                            <div class="number count-to" data-from="0" data-to="<?php echo isset($newsletter_confirmed) ? $newsletter_confirmed : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($newsletter_confirmed) ? $newsletter_confirmed : 0; ?></div>
+                        </div>
                     </div>
-                    <div class="content">
-                        <div class="text">Confirmed Subscribers</div>
-                        <div class="number count-to" data-from="0" data-to="<?php echo isset($newsletter_confirmed) ? $newsletter_confirmed : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($newsletter_confirmed) ? $newsletter_confirmed : 0; ?></div>
-                    </div>
-                </div>
+                </a>
             </div>
             
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <div class="info-box bg-orange hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">schedule</i>
+                <a href="<?php echo base_url('subscribers?status=pending'); ?>" style="display: block; text-decoration: none; color: inherit;">
+                    <div class="info-box bg-orange hover-expand-effect" style="cursor: pointer;">
+                        <div class="icon">
+                            <i class="material-icons">schedule</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Pending Confirmations</div>
+                            <div class="number count-to" data-from="0" data-to="<?php echo isset($newsletter_pending) ? $newsletter_pending : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($newsletter_pending) ? $newsletter_pending : 0; ?></div>
+                        </div>
                     </div>
-                    <div class="content">
-                        <div class="text">Pending Confirmations</div>
-                        <div class="number count-to" data-from="0" data-to="<?php echo isset($newsletter_pending) ? $newsletter_pending : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($newsletter_pending) ? $newsletter_pending : 0; ?></div>
-                    </div>
-                </div>
+                </a>
             </div>
             
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <div class="info-box bg-blue hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">send</i>
+                <a href="<?php echo base_url('newsletter/index'); ?>" style="display: block; text-decoration: none; color: inherit;">
+                    <div class="info-box bg-blue hover-expand-effect" style="cursor: pointer;">
+                        <div class="icon">
+                            <i class="material-icons">send</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Newsletters Sent</div>
+                            <div class="number count-to" data-from="0" data-to="<?php echo isset($newsletter_sent) ? $newsletter_sent : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($newsletter_sent) ? $newsletter_sent : 0; ?></div>
+                        </div>
                     </div>
-                    <div class="content">
-                        <div class="text">Newsletters Sent</div>
-                        <div class="number count-to" data-from="0" data-to="<?php echo isset($newsletter_sent) ? $newsletter_sent : 0; ?>" data-speed="1000" data-fresh-interval="20"><?php echo isset($newsletter_sent) ? $newsletter_sent : 0; ?></div>
-                    </div>
-                </div>
+                </a>
             </div>
             
           <!--  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
