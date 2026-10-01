@@ -58,7 +58,12 @@ class Subscribers extends BaseController {
             }
         }
         
-        redirect('subscribers');
+        $this->load->library('user_agent');
+        if ($this->agent->is_referral()) {
+            redirect($this->agent->referrer());
+        } else {
+            redirect('subscribers');
+        }
     }
 
     public function export(){

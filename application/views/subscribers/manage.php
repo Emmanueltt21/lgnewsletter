@@ -227,7 +227,7 @@
                                                 <td><?php echo date('M j, Y', strtotime($subscriber->created_at)); ?></td>
                                                 <td>
                                                     <?php if ($subscriber->status == 'pending'): ?>
-                                                        <button type="button" class="btn btn-xs btn-info waves-effect" onclick="resendConfirmation(<?php echo $subscriber->id; ?>)">
+                                                        <button type="button" class="btn btn-xs btn-info waves-effect" title="Resend Confirmation" onclick="resendConfirmation(<?php echo $subscriber->id; ?>)">
                                                             <i class="material-icons">send</i>
                                                         </button>
                                                     <?php endif; ?>
@@ -406,7 +406,8 @@ function resendConfirmation(id) {
     form.appendChild(input);
     document.body.appendChild(form);
     form.submit();
-    document.body.removeChild(form);
+    // Do not remove form immediately to prevent cancelling the submission
+    setTimeout(() => { document.body.removeChild(form); }, 500);
 }
 
 function bulkDelete(ids) {
@@ -448,7 +449,8 @@ function bulkResend(ids) {
 
     document.body.appendChild(form);
     form.submit();
-    document.body.removeChild(form);
+    // Do not remove form immediately to prevent cancelling the submission
+    setTimeout(() => { document.body.removeChild(form); }, 500);
 }
 
 function exportSelected(ids) {
@@ -464,7 +466,8 @@ function exportSelected(ids) {
     form.appendChild(input);
     document.body.appendChild(form);
     form.submit();
-    document.body.removeChild(form);
+    // Do not remove form immediately to prevent cancelling the submission
+    setTimeout(() => { document.body.removeChild(form); }, 500);
 }
 
 function exportSubscribers() {
