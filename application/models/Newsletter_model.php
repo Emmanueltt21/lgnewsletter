@@ -813,19 +813,19 @@ class Newsletter_model extends CI_Model
                                </p>
               
                                <p style='margin:0;'>
-                                 <a href='#' style='margin:0 8px;'>
+                                 <a href='https://www.facebook.com/LGMissions' style='margin:0 8px;'>
                                    <img src='https://cdn-icons-png.flaticon.com/512/733/733547.png' width='18' alt='Facebook'>
                                  </a>
-                                 <a href='#' style='margin:0 8px;'>
+                                 <a href='https://www.instagram.com/lgmissions' style='margin:0 8px;'>
                                    <img src='https://cdn-icons-png.flaticon.com/512/733/733558.png' width='18' alt='Instagram'>
                                  </a>
-                                 <a href='#' style='margin:0 8px;'>
+                                 <a href='https://lgmissions.org/' style='margin:0 8px;'>
                                    <img src='https://cdn-icons-png.flaticon.com/512/3670/3670358.png' width='18' alt='TIKTOK'>
                                  </a>
-                                 <a href='#' style='margin:0 8px;'>
+                                 <a href='https://www.youtube.com/@LGMISSIONS' style='margin:0 8px;'>
                                    <img src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png' width='18' alt='YouTube'>
                                  </a>
-                                 <a href='#' style='margin:0 8px;'>
+                                 <a href='https://lgmissions.org/' style='margin:0 8px;'>
                                    <img src='https://cdn-icons-png.flaticon.com/512/561/561127.png' width='18' alt='Email'>
                                  </a>
                                </p>
@@ -957,12 +957,14 @@ class Newsletter_model extends CI_Model
             '/(<img\b[^>]*?\ssrc=)(["\'])(.*?)\2/is',
             function ($m) use ($public_base) {
                 $tag_prefix = $m[1];
-                $quote      = $m[2];
-                $src        = trim($m[3]);
+                $quote = $m[2];
+                $src = trim($m[3]);
 
                 // Already correct — keep it
-                if (strpos($src, $public_base . '/uploads/') === 0 ||
-                    strpos($src, $public_base . '/assets/') === 0) {
+                if (
+                    strpos($src, $public_base . '/uploads/') === 0 ||
+                    strpos($src, $public_base . '/assets/') === 0
+                ) {
                     return $tag_prefix . $quote . $src . $quote;
                 }
 
@@ -980,8 +982,8 @@ class Newsletter_model extends CI_Model
 
                 // Extract just the path portion from full URLs
                 $parsed = parse_url($src);
-                $path   = isset($parsed['path']) ? urldecode($parsed['path']) : $src;
-                $path   = ltrim($path, '/');
+                $path = isset($parsed['path']) ? urldecode($parsed['path']) : $src;
+                $path = ltrim($path, '/');
 
                 // Strip any sub-folder prefix (e.g. lgnewsletter/uploads/...)
                 if (strpos($path, 'lgnewsletter/') === 0) {
