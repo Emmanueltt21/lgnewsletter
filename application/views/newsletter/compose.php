@@ -91,6 +91,10 @@
                                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
                                             <label for="content" style="margin: 0; font-size: 14px; font-weight: 600;">Newsletter Content</label>
                                             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                                <button type="button" class="btn btn-xs bg-orange waves-effect" id="btn_insert_username" onclick="insertUsernameTag()" style="padding: 4px 10px;">
+                                                    <i class="material-icons" style="font-size: 14px; vertical-align: middle;">person</i>
+                                                    <span>Insert {{username}}</span>
+                                                </button>
                                                 <button type="button" class="btn btn-xs btn-success waves-effect" id="btn_direct_upload_img" onclick="triggerDirectImageUpload()" style="padding: 4px 10px;">
                                                     <i class="material-icons" style="font-size: 14px; vertical-align: middle;">add_photo_alternate</i>
                                                     <span>Upload & Insert Image</span>
@@ -409,5 +413,26 @@ function handleDirectImageUpload(input) {
     };
 
     xhr.send(formData);
+}
+
+function insertUsernameTag() {
+    var tag = '{{username}}';
+    if (typeof tinymce !== 'undefined' && tinymce.get('content')) {
+        tinymce.get('content').insertContent(tag);
+    } else {
+        var textarea = document.getElementById('content');
+        if (textarea) {
+            var startPos = textarea.selectionStart;
+            var endPos = textarea.selectionEnd;
+            if (startPos !== undefined && endPos !== undefined) {
+                textarea.value = textarea.value.substring(0, startPos) + tag + textarea.value.substring(endPos, textarea.value.length);
+                textarea.selectionStart = startPos + tag.length;
+                textarea.selectionEnd = startPos + tag.length;
+                textarea.focus();
+            } else {
+                textarea.value += tag;
+            }
+        }
+    }
 }
 </script>
