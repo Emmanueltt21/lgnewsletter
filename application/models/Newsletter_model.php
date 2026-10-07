@@ -677,7 +677,8 @@ class Newsletter_model extends CI_Model
         $content = str_replace('[FIRST_NAME]', $subscriber->first_name, $content);
         $content = str_replace('[LAST_NAME]', $subscriber->last_name, $content);
         $content = str_replace('[EMAIL]', $subscriber->email, $content);
-        $content = str_replace('{{username}}', trim($subscriber->first_name . ' ' . $subscriber->last_name), $content);
+        $content = str_replace('{{first_name}}', $subscriber->first_name, $content);
+        $content = str_replace('{{last_name}}', $subscriber->last_name, $content);
 
         // Unsubscribe link is handled in the footer; body link commented out
         $unsubscribe_url = base_url() . "unsubscribe.php?email=" . urlencode($subscriber->email);
