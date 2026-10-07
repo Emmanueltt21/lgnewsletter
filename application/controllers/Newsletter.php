@@ -151,11 +151,19 @@ class Newsletter extends BaseController
             return;
         }
 
-        $test_subscriber = new stdClass();
-        $test_subscriber->id = null;
-        $test_subscriber->first_name = 'Test';
-        $test_subscriber->last_name = 'Recipient';
-        $test_subscriber->email = $test_email;
+        // Try to find the actual subscriber to use their real name for a realistic preview
+        $test_subscriber = $this->Newsletter_model->get_subscriber_by_email($test_email);
+        
+        if (!$test_subscriber) {
+            // If the test email is not a subscriber, borrow a real name from the database for the preview
+            $real_subscriber = $this->db->where('status', 'confirmed')->limit(1)->get('newsletter_subscribers')->row();
+            
+            $test_subscriber = new stdClass();
+            $test_subscriber->id = null;
+            $test_subscriber->first_name = $real_subscriber ? $real_subscriber->first_name : 'Test';
+            $test_subscriber->last_name = $real_subscriber ? $real_subscriber->last_name : 'Recipient';
+            $test_subscriber->email = $test_email;
+        }
 
         $sent = $this->Newsletter_model->send_newsletter_email($newsletter, $test_subscriber);
 
