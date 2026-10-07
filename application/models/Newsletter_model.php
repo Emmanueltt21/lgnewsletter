@@ -714,15 +714,18 @@ class Newsletter_model extends CI_Model
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         
             <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f3f5f8; }
+                .wrapper { width: 100%; background-color: #f3f5f8; padding: 30px 0; }
+                .container { max-width: 600px; margin: 0 auto; background-color: transparent; }
                 .header { background: linear-gradient(135deg, #1da2f0 0%, #203550  100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-                .content { background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; }
+                .content { background: #ffffff; padding: 30px; border-left: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; }
                 .signature { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+                .footer { background-color: #1f3550; color: #ffffff; border-radius: 0 0 10px 10px; overflow: hidden; }
             </style>
         </head>
         <body>
-            <div class='container'>
+            <div class='wrapper'>
+                <div class='container'>
                 <div class='header'>
                     <img src='" . $logo_src . "' alt='Lighthouse Global Missions' style='max-height: 90px; width: auto; display: block; margin: 0 auto 10px;'>
                     <h1> Lighthouse Global Missions</h1>
@@ -736,12 +739,8 @@ class Newsletter_model extends CI_Model
                         <p>" . nl2br(htmlspecialchars($signature)) . "</p>
                     </div>
                 </div>
-            </div>
-            <table width='100%' cellpadding='0' cellspacing='0' border='0' style='background-color:#e6e6e6; padding:30px 0;'>
-              <tr>
-                <td align='center'>
-                  
-                  <table width='700' cellpadding='0' cellspacing='0' border='0' style='background-color:#1f3550; font-family:Arial, Helvetica, sans-serif;'>
+                <div class='footer'>
+                  <table width='100%' cellpadding='0' cellspacing='0' border='0' style='background-color:#1f3550; font-family:Arial, Helvetica, sans-serif;'>
                     
                      <tr>
                        <td align='center' style='padding:20px 0; background-color:#3c567c; color:#ffffff; font-size:14px; letter-spacing:1px;'>
@@ -843,10 +842,9 @@ class Newsletter_model extends CI_Model
                      </tr>
               
                    </table>
-              
-                 </td>
-               </tr>
-             </table>
+                </div>
+              </div>
+            </div>
         </body>
         </html>";
     }
