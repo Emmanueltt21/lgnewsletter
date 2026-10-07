@@ -753,10 +753,8 @@ class Newsletter_model extends CI_Model
                      <tr>
                        <td align='center' style='padding:25px 0;'>
                          
-                         <table cellpadding='0' cellspacing='0' border='0'>
-                           <tr>
-                             
-                             <td align='center' style='padding-right:40px;'>
+                         <div style='text-align:center;'>
+                           <div style='display:inline-block; vertical-align:middle; margin:10px 15px;'>
                                <a href='https://paypal.me/LGmissions?country.x=DE&locale.x=en_US'
                                   style='background-color:#c4312b; color:#ffffff;
                                          padding:12px 35px;
@@ -767,16 +765,14 @@ class Newsletter_model extends CI_Model
                                          display:inline-block;'>
                                  GIVE
                                </a>
-                             </td>
-              
-                             <td align='center' style='padding:0 40px;'>
+                           </div>
+                           <div style='display:inline-block; vertical-align:middle; margin:10px 15px;'>
                                <img src='https://newsletter.lighthouseglobalmissions.org/assets/images/newsletter_logo_90.png'
                                     width='60'
                                     alt='Logo'
                                     style='display:block;'>
-                             </td>
-              
-                             <td align='center' style='padding-left:40px;'>
+                           </div>
+                           <div style='display:inline-block; vertical-align:middle; margin:10px 15px;'>
                                <a href='mailto:" . $reply_to . "?subject=Prayer%20Request'
                                   style='background-color:#4b6f9d;
                                          color:#ffffff;
@@ -786,10 +782,8 @@ class Newsletter_model extends CI_Model
                                          display:inline-block;'>
                                  Let’s pray for you!
                                </a>
-                             </td>
-              
-                           </tr>
-                         </table>
+                           </div>
+                         </div>
               
                        </td>
                      </tr>
