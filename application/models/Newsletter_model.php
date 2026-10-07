@@ -719,6 +719,7 @@ class Newsletter_model extends CI_Model
                 .container { max-width: 600px; margin: 0 auto; background-color: transparent; }
                 .header { background: linear-gradient(135deg, #1da2f0 0%, #203550  100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
                 .content { background: #ffffff; padding: 30px; border-left: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; }
+                .content img { max-width: 100% !important; height: auto !important; }
                 .signature { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
                 .footer { background-color: #1f3550; color: #ffffff; border-radius: 0 0 10px 10px; overflow: hidden; }
             </style>
@@ -1006,6 +1007,23 @@ class Newsletter_model extends CI_Model
 
                 // Anything else — leave untouched
                 return $tag_prefix . $quote . $src . $quote;
+            },
+            $content
+        );
+
+        // Enforce max-width: 100% and height: auto inline on all images to fix layout issues in Gmail/iPads
+        $content = preg_replace_callback(
+            '/<img\b[^>]*>/is',
+            function ($matches) {
+                $img = $matches[0];
+                if (stripos($img, 'style=') !== false) {
+                    // Prepend to existing style
+                    $img = preg_replace('/style=(["\'])/is', 'style=$1max-width: 100% !important; height: auto !important; ', $img);
+                } else {
+                    // Add style attribute
+                    $img = str_replace('<img ', '<img style="max-width: 100% !important; height: auto !important;" ', $img);
+                }
+                return $img;
             },
             $content
         );
