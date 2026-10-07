@@ -703,6 +703,8 @@ class Newsletter_model extends CI_Model
         if (empty($unsubscribe_url)) {
             $unsubscribe_url = $base . "unsubscribe.php";
         }
+        $settings = $this->get_email_settings();
+        $reply_to = isset($settings['reply_to']) && !empty($settings['reply_to']) ? $settings['reply_to'] : (isset($settings['sender_email']) ? $settings['sender_email'] : '');
 
         return "
         <!DOCTYPE html>
@@ -775,7 +777,7 @@ class Newsletter_model extends CI_Model
                              </td>
               
                              <td align='center' style='padding-left:40px;'>
-                               <a href='#'
+                               <a href='mailto:" . $reply_to . "?subject=Prayer%20Request'
                                   style='background-color:#4b6f9d;
                                          color:#ffffff;
                                          padding:12px 30px;
